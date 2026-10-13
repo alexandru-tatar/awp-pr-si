@@ -1,0 +1,1342 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Angebot: Micro-App-Plattform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700;800&display=swap">
+<style>
+:root{
+  --bg:#ffffff; --bg2:#f6f3f1; --card:#ffffff; --card2:rgba(30,20,20,.06);
+  --line:rgba(30,20,20,.11); --txt:#1d1f23; --mut:#5b616c; --dim:#9a9fa8;
+  --or:#d82206; --or2:#ef6a52; --bl:#3b4350; --gr:#16915c; --rd:#b4331f;
+  --sans:"Barlow",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:var(--sans);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#050914;overflow:hidden;font-family:var(--sans);color:var(--txt);-webkit-font-smoothing:antialiased}
+#stage{position:fixed;left:50%;top:50%;width:1920px;height:1080px;transform-origin:0 0;background:#fff;overflow:hidden}
+.slide{position:absolute;inset:0;padding:96px 120px 88px;opacity:0;visibility:hidden;transition:opacity .55s ease,visibility 0s .55s;overflow:hidden;
+  background:
+   radial-gradient(900px 600px at 105% -10%,rgba(216,34,6,.09),transparent 60%),
+   radial-gradient(800px 600px at -10% 115%,rgba(30,35,45,.06),transparent 60%),
+   linear-gradient(160deg,#fff 0%,var(--bg2) 100%)}
+.slide::before{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:80px 80px;opacity:.16;mask-image:radial-gradient(ellipse at 70% 30%,#000 0%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse at 70% 30%,#000 0%,transparent 70%);pointer-events:none}
+.slide.on{opacity:1;visibility:visible;transition:opacity .55s ease}
+.slide>*{position:relative}
+
+/* animation */
+[data-a]{opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+.on [data-a]{opacity:1;transform:none;transition-delay:calc(var(--i,0)*90ms + 150ms)}
+[data-a=l]{transform:translateX(-40px)}[data-a=r]{transform:translateX(40px)}[data-a=s]{transform:scale(.92)}
+
+/* type */
+.eyebrow{font:500 22px/1 var(--mono);letter-spacing:.22em;text-transform:uppercase;color:var(--or);display:flex;align-items:center;gap:18px}
+.eyebrow::before{content:"";width:48px;height:2px;background:var(--or)}
+h1,h2{font-weight:700;letter-spacing:-.02em;line-height:1.02}
+h2{font-size:92px;margin-top:30px}
+h2 em,h1 em{font-style:normal;color:var(--or)}
+.lead{font-size:30px;line-height:1.45;color:var(--mut);max-width:1000px;margin-top:26px}
+.mono{font-family:var(--mono)}
+.foot{position:absolute!important;left:120px;right:120px;bottom:44px;display:flex;justify-content:space-between;font:400 17px var(--mono);color:var(--dim);letter-spacing:.08em}
+.foot b{color:var(--or);font-weight:500}
+
+/* primitives */
+.card{background:var(--card);border:1px solid var(--line);border-radius:28px;padding:36px;box-shadow:0 14px 34px -18px rgba(40,20,15,.22)}
+.ico{width:64px;height:64px;border-radius:18px;display:grid;place-items:center;background:rgba(216,34,6,.13);color:var(--or);flex:none}
+.ico svg{width:32px;height:32px}
+.ico.bl{background:rgba(30,35,45,.13);color:var(--bl)}
+.ico.gr{background:rgba(22,145,92,.13);color:var(--gr)}
+.ico.rd{background:rgba(180,51,31,.13);color:var(--rd)}
+svg:where(.i){width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.pill{display:inline-flex;align-items:center;gap:10px;font:500 22px var(--mono);padding:11px 24px;border-radius:99px;border:1px solid var(--line);background:var(--card2)}
+.pill.or{background:var(--or);border-color:var(--or);color:#fff;font-weight:700}
+.pill.bl{background:rgba(30,35,45,.15);border-color:rgba(30,35,45,.4);color:var(--bl)}
+.pill.gr{background:rgba(22,145,92,.13);border-color:rgba(22,145,92,.4);color:var(--gr)}
+.row{display:flex}.col{display:flex;flex-direction:column}.g16{gap:16px}.g24{gap:24px}.g32{gap:32px}
+
+/* 1 title */
+.s1{padding:0;background:radial-gradient(1200px 800px at 85% 10%,#ee3a1c,transparent 60%),linear-gradient(150deg,#d82206,#b01a04)!important;color:#fff}
+.s1::before{background-image:linear-gradient(rgba(255,255,255,.35) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.35) 1px,transparent 1px);opacity:.12}
+.s1 .eyebrow{color:#fff}.s1 .eyebrow::before{background:#fff}
+.s1 h1 em{color:#1d1f23}
+.s1 .sub{color:rgba(255,255,255,.9)!important}
+.s1 .meta{color:rgba(255,255,255,.75)!important}
+.s1 .t{background:#fff;border:0;color:#5b616c;box-shadow:0 20px 40px -20px rgba(60,0,0,.5)}
+.s1 .t.b,.s1 .t.g{color:#1d1f23}
+.s1 .t.hot{background:#1d1f23;color:#fff}
+.s1 .t.new{background:transparent;border:2px dashed rgba(255,255,255,.8);color:#fff;box-shadow:none}
+.wm{position:absolute;left:0;top:84px;color:#fff;line-height:1.12;font-size:34px}
+.wm b{display:block;font-weight:700}.wm span{font-weight:300;font-size:32px}
+.fwm{color:var(--or);font-weight:600;letter-spacing:.02em;font-family:var(--sans);font-size:20px}
+.fwm span{font-weight:400;color:var(--dim)}
+.s1 .l{position:absolute;left:120px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:center;width:1000px}
+.s1 h1{font-size:150px;margin:44px 0 40px}
+.s1 .sub{font-size:36px;color:var(--mut);line-height:1.4;max-width:820px}
+.s1 .meta{position:absolute;left:120px;bottom:70px;font:500 21px var(--mono);letter-spacing:.2em;color:var(--dim)}
+.gt-w{position:absolute;right:110px;top:0;bottom:0;display:flex;align-items:center}
+.grid-t{display:grid;grid-template-columns:repeat(3,200px);gap:22px}
+.t{height:200px;border-radius:30px;border:1px solid var(--line);background:var(--card);display:flex;flex-direction:column;justify-content:space-between;padding:26px;font:500 20px var(--mono);color:var(--mut);position:relative;overflow:hidden}
+.t svg{width:44px;height:44px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.t.hot{background:linear-gradient(145deg,var(--or),#ff9a5c);border:0;color:#fff}
+.t.b{color:var(--bl)}.t.g{color:var(--gr)}
+.t.new{border:2px dashed rgba(216,34,6,.6);color:var(--or);background:transparent;animation:pulse 3s infinite}
+@keyframes pulse{50%{background:rgba(216,34,6,.1)}}
+.on .t{animation-name:floaty;animation-duration:7s;animation-iteration-count:infinite;animation-timing-function:ease-in-out}
+@keyframes floaty{50%{transform:translateY(-8px)}}
+.t:nth-child(2n){animation-delay:-2s!important}.t:nth-child(3n){animation-delay:-4s!important}
+
+.s1 h1{font-size:132px!important;line-height:1.02}
+.s1 .l{width:980px}
+.pm{position:absolute;right:100px;top:50%;margin-top:-340px;width:760px;height:680px;background:#fff;border-radius:26px;box-shadow:0 60px 120px -30px rgba(60,0,0,.65);overflow:hidden;color:#1d1f23}
+.pm .top{display:flex;align-items:center;gap:9px;padding:14px 20px;background:#ecebe8}
+.pm .top i{width:12px;height:12px;border-radius:50%;background:#c9c6c0}
+.pm .top .u{flex:1;margin-left:12px;background:#fff;border-radius:99px;padding:6px 18px;font-size:16px;color:#6b7280}
+.pm .hd{display:flex;justify-content:space-between;align-items:center;padding:18px 28px;background:#1d1f23;color:#fff;font-size:22px;font-weight:700}
+.pm .hd span{font-size:15px;font-weight:600;color:#4ade9b;background:rgba(74,222,155,.15);padding:5px 14px;border-radius:99px}
+.pm .g{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:28px}
+.pm .a{height:150px;border-radius:20px;border:1px solid #e6e2dd;background:#faf8f6;padding:20px;display:flex;flex-direction:column;justify-content:space-between;font-weight:700;font-size:20px}
+.pm .a svg{width:38px;height:38px;fill:none;stroke:#d82206;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.pm .a.h{background:#d82206;border-color:#d82206;color:#fff}.pm .a.h svg{stroke:#fff}
+.pm .a.n{border:2px dashed #d82206;background:#fff4f1;color:#d82206}
+.on .pm .a{animation:floaty 7s ease-in-out infinite}.pm .a:nth-child(2n){animation-delay:-2s}.pm .a:nth-child(3n){animation-delay:-4s}
+/* 2 */
+.s2 .stats{display:flex;align-items:center;gap:40px;margin-top:64px}
+.big{font:700 134px/1 var(--sans);letter-spacing:-.05em}
+.big.old{color:var(--dim);text-decoration:line-through;text-decoration-thickness:8px}
+.big.new{color:var(--or)}
+.arrow{width:72px;height:72px;color:var(--or);stroke-width:2}
+.s2 .cap{font-size:26px;color:var(--mut);margin-top:18px;max-width:900px}
+.s2 .ex{position:absolute;right:120px;top:210px;width:560px;display:flex;flex-direction:column;gap:22px}
+.ex .card{display:flex;align-items:center;gap:26px;padding:26px 30px;font-size:30px;font-weight:500}
+.ex small{display:block;font:400 19px var(--mono);color:var(--mut);margin-top:6px}
+.bars{display:flex;gap:26px;margin-top:70px;max-width:1000px}
+.bar{flex:1}.bar .k{font:500 18px var(--mono);color:var(--mut);letter-spacing:.1em;margin-bottom:14px}
+.bar .tr{height:16px;border-radius:9px;background:var(--card2);overflow:hidden}
+.bar .tr i{display:block;height:100%;border-radius:9px;background:var(--bl);width:0;transition:width 1.4s cubic-bezier(.2,.7,.2,1) .6s}
+.bar:last-child .tr i{background:var(--or)}
+.on .bar .tr i{width:var(--w)}
+
+.s2 .ex{display:none}
+.pr2{position:absolute;right:120px;top:190px;width:700px;display:flex;flex-direction:column;gap:20px}
+.pr2 .q{align-self:flex-end;background:#1d1f23;color:#fff;border-radius:24px 24px 6px 24px;padding:18px 26px;font-size:26px;max-width:560px;line-height:1.35;box-shadow:0 20px 40px -20px rgba(0,0,0,.5)}
+.pr2 .ar{display:flex;align-items:center;gap:12px;font-size:20px;font-weight:700;color:var(--or);letter-spacing:.1em;text-transform:uppercase;padding-left:10px}
+.pr2 .ar svg{width:28px;height:28px}
+.dash{background:#fff;border:1px solid var(--line);border-radius:26px;box-shadow:0 40px 80px -36px rgba(40,20,15,.5);overflow:hidden}
+.dash .hd2{display:flex;justify-content:space-between;padding:18px 26px;border-bottom:1px solid var(--line);font-size:24px;font-weight:700}
+.dash .hd2 span{font-size:17px;color:var(--gr);font-weight:700;background:rgba(22,145,92,.12);padding:3px 12px;border-radius:99px}
+.dash .bs{padding:22px 26px 26px;display:flex;flex-direction:column;gap:13px}
+.dash .r{display:grid;grid-template-columns:170px 1fr 56px;align-items:center;gap:14px;font-size:20px}
+.dash .r i{display:block;height:20px;border-radius:7px;background:var(--bl);width:0;transition:width 1.2s cubic-bezier(.2,.7,.2,1) calc(.9s + var(--k)*.12s)}
+.dash .r:nth-child(1) i,.dash .r:nth-child(4) i{background:var(--or)}
+.on .dash .r i{width:var(--w)}
+.dash .r b{text-align:right;color:var(--mut);font-weight:600}
+/* 3 */
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:56px}
+.prob{padding:34px 36px;display:flex;flex-direction:column;gap:18px;min-height:290px;justify-content:flex-end;padding:36px;gap:14px;position:relative;overflow:hidden}
+.prob h3{font-size:36px;font-weight:600;letter-spacing:-.02em}
+.prob p{font-size:23px;line-height:1.4;color:var(--mut)}
+.prob .n{position:absolute;right:30px;top:24px;font:500 20px var(--mono);color:var(--dim)}
+
+.s3b .wrap{display:block;margin-top:10px}
+.s3b .col{width:1040px;margin:0 auto}
+.s3b h2{font-size:104px}
+.pl{display:flex;flex-direction:column;gap:14px;margin-top:40px}
+.pi{display:flex;align-items:center;gap:20px;padding:14px 20px;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 12px 26px -18px rgba(40,20,15,.35)}
+.pi .ico{width:52px;height:52px;border-radius:15px}.pi .ico svg{width:26px;height:26px}
+.pi b{font-size:27px;font-weight:700;display:block;line-height:1.1}.pi span{font-size:20px;color:var(--mut)}
+.col{position:relative;height:720px;margin-left:-20px}
+.mw{position:absolute;width:340px;border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 30px 60px -26px rgba(40,20,15,.55),0 0 0 1px rgba(0,0,0,.06);font-size:16px;color:#222}
+.on .mw{animation:wob 7s ease-in-out infinite}
+@keyframes wob{50%{transform:translateY(-8px) rotate(var(--r))}}
+.mw{transform:rotate(var(--r))}
+.mw .tb{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#e6e6e6;font:400 12px ui-monospace,Menlo,monospace;color:#666}
+.mw .tb i{width:9px;height:9px;border-radius:50%;background:#bbb}
+.mw .hd{padding:10px 14px;color:#fff;font-weight:700;font-size:18px}
+.mw .bd{padding:12px 14px 16px;display:flex;flex-direction:column;gap:8px}
+.mw .f{height:24px;border:1px solid #ccc;border-radius:3px;padding:3px 8px;font-size:13px;color:#999}
+.mw .b{align-self:flex-start;padding:5px 14px;color:#fff;font-weight:600;font-size:14px}
+.mw .t{height:8px;background:#ddd;border-radius:3px}
+.mw code{font:500 13px ui-monospace,Menlo,monospace;background:#fde7e4;color:#a40e26;padding:6px 8px;border-radius:4px;display:block}
+.tag2{position:absolute;display:flex;align-items:center;gap:8px;background:var(--or);color:#fff;font-weight:700;font-size:19px;padding:7px 16px;border-radius:99px;box-shadow:0 10px 22px -8px rgba(216,34,6,.7);white-space:nowrap}
+.tag2 svg{width:20px;height:20px}
+.cmds{position:absolute;left:0;right:0;top:540px}
+.cq{font:700 22px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:18px;display:flex;align-items:center;gap:14px}
+.cq::after{content:"?";width:36px;height:36px;border-radius:50%;background:var(--or);color:#fff;display:grid;place-items:center;font-size:22px;letter-spacing:0}
+.cr2{display:flex;gap:22px}
+.cm{flex:1;background:#14161a;border-radius:16px;padding:0 0 16px;box-shadow:0 26px 50px -24px rgba(0,0,0,.65);transform:rotate(var(--r));overflow:hidden}
+.on .cm{animation:wob 7s ease-in-out infinite}
+.cm .cb{display:flex;gap:7px;padding:11px 14px;background:#272a30}.cm .cb i{width:9px;height:9px;border-radius:50%;background:#ff5f57}.cm .cb i:nth-child(2){background:#febc2e}.cm .cb i:nth-child(3){background:#28c840}
+.cm code{display:block;padding:16px 16px 4px;font:600 21px ui-monospace,Menlo,monospace;color:#d6dae1;white-space:nowrap}
+.cm code span{color:#8ee0b0;margin-right:8px}
+.cm small{display:block;padding:0 16px;font:500 16px var(--sans);color:#8a93a3}
+/* 4 */
+.s4 h2{font-size:120px;margin-top:40px}
+.s4 h2 span{display:block;color:var(--or)}
+.pill-row{display:flex;gap:28px;margin-top:84px}
+.pillar{flex:1;padding:36px 38px;display:flex;flex-direction:column;gap:20px}
+.pillar h3{font-size:38px;font-weight:600;letter-spacing:-.02em}
+.pillar p{font-size:24px;line-height:1.4;color:var(--mut)}
+.quote{margin-top:56px;font-size:28px;color:var(--dim);font-style:italic;padding-left:28px;border-left:3px solid var(--or);max-width:1100px;line-height:1.5}
+
+/* 5 */
+.cols{display:grid;grid-template-columns:repeat(3,1fr);gap:36px;margin-top:90px;position:relative}
+.bb{padding:44px 40px 40px;display:flex;flex-direction:column;gap:20px;position:relative;min-height:400px}
+.bb .num{font:700 24px var(--mono);color:var(--or);background:var(--bg);border:2px solid var(--or);width:60px;height:60px;border-radius:50%;display:grid;place-items:center}
+.bb h3{font-size:56px;font-weight:700;letter-spacing:-.03em;margin-top:12px}
+.bb .tag{font:500 21px var(--mono);color:var(--bl);letter-spacing:.06em}
+.bb ul{list-style:none;display:flex;flex-direction:column;gap:14px;margin-top:10px}
+.bb li{font-size:25px;color:var(--mut);display:flex;gap:14px;align-items:flex-start;line-height:1.35}
+.bb li::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--or);margin-top:11px;flex:none}
+.note{margin-top:38px;display:flex;gap:16px;align-items:center;font:500 22px var(--mono);color:var(--gr)}
+
+/* 6 */
+.s6 .wrap{display:grid;grid-template-columns:1fr 760px;gap:80px;height:780px;margin-top:-60px;align-items:center}
+.s6 h2{font-size:104px}
+.win{--mut:#9aa3b2;--bl:#8fb4ff;--txt:#f3f1ec;color:var(--txt);--or:#ff6a4d;--or2:#ffa08f;background:#1d1f23;border:1px solid var(--line);border-radius:22px;overflow:hidden;box-shadow:0 50px 100px -30px rgba(0,0,0,.45)}
+.win .bar2{display:flex;align-items:center;gap:10px;padding:18px 22px;background:#272a30;border-bottom:1px solid var(--line);font:400 18px var(--mono);color:var(--mut)}
+.win .bar2 i{width:14px;height:14px;border-radius:50%;background:#ff5f57}.win .bar2 i:nth-child(2){background:#febc2e}.win .bar2 i:nth-child(3){background:#28c840}
+.win .bar2 span{margin-left:14px}
+.tree{padding:22px 26px;display:flex;flex-direction:column;gap:3px}
+.f{display:grid;grid-template-columns:34px 300px 1fr;align-items:center;padding:11px 14px;border-radius:12px;font:500 23px var(--mono)}
+.f svg{width:22px;height:22px;stroke:var(--bl);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.f em{font-style:normal;font:400 19px var(--sans);color:var(--mut)}
+.f.hl{background:rgba(216,34,6,.1)}.f.hl svg{stroke:var(--or)}.f.hl{color:var(--or2)}
+.chips{display:flex;gap:18px;margin-top:44px;flex-wrap:wrap}
+.s6 .lead{font-size:28px}
+
+.s6b .wrap{display:grid;grid-template-columns:600px 1fr;gap:60px;align-items:center;height:820px;margin-top:-50px}
+.s6b h2{font-size:88px}
+.s6b .tog{margin:30px 0 26px}
+.s6b .tr3{padding:10px 20px 4px}
+.s6b .r3{padding-top:5px;padding-bottom:5px;font-size:20px}
+.s6b .r3 em{font-size:17px}
+.s6b .code{font-size:19px;margin-top:6px}
+.s6b .leg{padding:16px 26px;margin-top:14px}
+.s6b .win{--or:#ff6a4d}
+.tr3{padding:18px 22px;display:flex;flex-direction:column}
+.r3{display:grid;grid-template-columns:1fr auto;align-items:center;padding:8px 14px 8px calc(14px + var(--d,0)*34px);border-radius:10px;font:500 22px var(--sans);gap:24px}
+.r3 svg{width:20px;height:20px;stroke:var(--bl);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;margin-right:12px;vertical-align:-3px}
+.r3 em{font-style:normal;font:400 18px var(--sans);color:var(--mut);text-align:right}
+.r3.hl{background:rgba(216,34,6,.16);color:var(--or2)}.r3.hl svg{stroke:var(--or)}
+.r3.fo{color:var(--mut)}
+.leg{padding:24px 30px;display:flex;gap:22px;align-items:center;margin-top:18px}
+.leg h3{font-size:30px;font-weight:700;letter-spacing:-.01em}
+.leg p{font-size:22px;color:var(--mut);margin-top:2px}
+.leg .ico{width:54px;height:54px}
+.s6 .wrap{grid-template-columns:600px 1fr;gap:60px;height:820px;margin-top:-50px}
+.tog{display:flex;gap:16px;margin-top:44px}
+.tog button{all:unset;cursor:pointer;font:600 28px var(--sans);padding:16px 38px;border-radius:99px;border:2px solid var(--line);background:#fff;color:var(--txt);box-shadow:0 8px 20px -12px rgba(40,20,15,.3);transition:.2s}
+.tog button:hover{border-color:var(--or)}
+.tog button.on{background:var(--or);border-color:var(--or);color:#fff}
+.same{margin-top:34px;font:500 24px var(--sans);color:var(--mut);line-height:1.5}
+.same b{color:var(--or);font-weight:600}
+.stack{display:none}.stack.on{display:block;animation:fin .45s ease}
+@keyframes fin{from{opacity:0;transform:translateY(10px)}}
+.s6 .tr3{padding:12px 20px 6px}
+.s6 .r3{padding-top:6px;padding-bottom:6px;font-size:21px}
+.code{margin:10px 20px 20px;padding:18px 24px;border-radius:14px;background:#14161a;border:1px solid rgba(255,255,255,.08);font:400 20px/1.55 ui-monospace,"SF Mono",Menlo,Consolas,monospace;color:#d6dae1;white-space:pre}
+.code .h{display:block;font:600 15px var(--sans);letter-spacing:.16em;color:var(--or2);margin-bottom:8px;text-transform:uppercase}
+.code .k{color:#ff9d8a}.code .v{color:#8ee0b0}.code .c{color:#7d8696}
+/* 7 */
+.flow{display:flex;align-items:stretch;margin-top:120px}
+.step{flex:1;padding:36px 28px 34px;display:flex;flex-direction:column;align-items:flex-start;gap:20px;position:relative;border-radius:0;background:var(--card);border:1px solid var(--line);margin-left:-1px;min-height:420px}
+.step:first-child{border-radius:28px 0 0 28px;margin-left:0}.step:last-child{border-radius:0 28px 28px 0}
+.step::after{content:"";position:absolute;right:-22px;top:50%;margin-top:-22px;width:44px;height:44px;background:var(--bg2);border:1px solid var(--line);border-left:0;border-bottom:0;transform:rotate(45deg) scale(.7);z-index:2}
+.step:last-child::after{display:none}
+.step h3{font-size:34px;font-weight:600;letter-spacing:-.02em}
+.step p{font-size:21px;color:var(--mut);line-height:1.4}
+.step .k{font:500 18px var(--mono);color:var(--dim)}
+.step.hot{background:linear-gradient(160deg,rgba(216,34,6,.22),rgba(216,34,6,.06));border-color:rgba(216,34,6,.55)}
+.step.hot .ico{background:var(--or);color:#fff}
+.step.ok{background:linear-gradient(160deg,rgba(22,145,92,.18),rgba(22,145,92,.04));border-color:rgba(22,145,92,.45)}
+.legend{display:flex;gap:44px;margin-top:56px;font:500 22px var(--mono);color:var(--mut)}
+.legend span{display:flex;align-items:center;gap:12px}.legend i{width:14px;height:14px;border-radius:50%}
+
+/* GitHub mock */
+.s7{padding-top:84px}
+.s7 h2{font-size:76px;margin-top:22px}
+.s7 .hd{display:flex;align-items:flex-end;justify-content:space-between}
+.s7 .auto{display:flex;align-items:center;gap:12px;font:500 22px var(--sans);color:var(--mut);padding-bottom:12px}
+.s7 .auto i{width:12px;height:12px;border-radius:50%;background:var(--gr);box-shadow:0 0 0 6px rgba(22,145,92,.16)}
+.stp{display:flex;align-items:center;margin-top:26px}
+.stp .n{display:flex;align-items:center;gap:14px;font:600 24px var(--sans);color:var(--txt);white-space:nowrap}
+.stp .n b{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:var(--gr);color:#fff;box-shadow:0 8px 20px -8px rgba(22,145,92,.7)}
+.stp .n b svg{width:24px;height:24px;stroke-width:2.6}
+.stp .n.h b{background:var(--or);box-shadow:0 8px 20px -8px rgba(216,34,6,.7)}
+.stp .n.l b{background:var(--txt);box-shadow:0 8px 20px -8px rgba(0,0,0,.5)}
+.stp .ln{flex:1;height:3px;margin:0 18px;border-radius:3px;background:linear-gradient(90deg,var(--gr),var(--gr));opacity:.45;transform-origin:left;transform:scaleX(0);transition:transform .9s cubic-bezier(.2,.7,.2,1) calc(.5s + var(--i)*.15s)}
+.on .stp .ln{transform:none}
+.s7 .wrap{display:grid;grid-template-columns:1fr 600px;gap:36px;margin-top:30px;align-items:start}
+.gh{--g:#1a7f37;--pu:#8250df;--b:#d0d7de;--t:#1f2328;--m:#59636e;background:#fff;color:var(--t);border:1px solid var(--b);border-radius:16px;box-shadow:0 2px 0 rgba(255,255,255,.8) inset,0 40px 80px -36px rgba(40,20,15,.45),0 8px 20px -10px rgba(40,20,15,.18);overflow:hidden;font-family:var(--sans)}
+.gh svg.ck{width:24px;height:24px;flex:none}
+.gh .top{display:flex;align-items:center;gap:10px;padding:11px 20px;background:#eef1f4;border-bottom:1px solid var(--b)}
+.gh .top i{width:12px;height:12px;border-radius:50%;background:#c9ced4}
+.gh .top .u{flex:1;margin-left:12px;background:#fff;border-radius:99px;padding:5px 18px;font-size:17px;color:var(--m);border:1px solid #e1e5ea}
+.gh .ttl{padding:16px 26px 14px;border-bottom:1px solid var(--b)}
+.gh .ttl h3{font-size:32px;font-weight:600;letter-spacing:-.01em}.gh .ttl h3 span{color:var(--m);font-weight:300}
+.gh .meta{display:flex;align-items:center;gap:14px;margin-top:10px;font-size:19px;color:var(--m)}
+.gh .badge{display:inline-flex;align-items:center;gap:8px;background:var(--pu);color:#fff;border-radius:99px;padding:4px 15px 4px 11px;font-weight:600;font-size:18px}
+.gh .badge svg{width:17px;height:17px;stroke:#fff;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.gh .box{margin:16px 26px;border:1px solid var(--b);border-radius:12px;overflow:hidden}
+.gh .bh{display:flex;gap:14px;align-items:center;padding:13px 20px;background:linear-gradient(180deg,#f0faf3,#f6f8fa);border-bottom:1px solid var(--b)}
+.gh .bh h4{font-size:23px;font-weight:600}.gh .bh p{font-size:18px;color:var(--m)}
+.gh .cr{display:grid;grid-template-columns:28px 1fr auto auto;gap:14px;align-items:center;padding:9px 20px;border-bottom:1px solid #e9ecef;font-size:20px}
+.gh .cr:last-child{border-bottom:0}
+.gh .cr b{font-weight:600}.gh .cr span{color:var(--m)}
+.gh .cr em{font-style:normal;color:var(--m);font-size:17px;font-variant-numeric:tabular-nums}
+.gh .cr a{color:#0969da;font-size:18px;font-weight:500}
+.on .gh .cr svg.ck{animation:pop .5s cubic-bezier(.3,1.6,.5,1) both;animation-delay:calc(var(--i)*90ms + 450ms)}
+@keyframes pop{from{transform:scale(0)}}
+.gh .mg{margin:0 26px 18px;display:flex;gap:16px;align-items:center;padding:12px 20px;border-radius:12px;background:linear-gradient(90deg,#f4eefe,#faf7ff);border:1px solid #d8c7f7}
+.gh .mg b{font-size:21px;font-weight:600}.gh .mg p{font-size:18px;color:var(--m)}
+.gh .mg .pc{width:34px;height:34px;border-radius:50%;background:var(--pu);display:grid;place-items:center;flex:none}
+.gh .mg .pc svg{width:19px;height:19px;stroke:#fff;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.dep .bh{background:#f6f8fa}
+.dep .dp{padding:20px 22px 22px;display:flex;flex-direction:column;gap:0}
+.dep .env{display:flex;align-items:center;gap:14px;font-size:28px;font-weight:700;letter-spacing:-.01em;margin-bottom:14px}
+.dep .env i{width:14px;height:14px;border-radius:50%;background:var(--g);box-shadow:0 0 0 6px rgba(26,127,55,.18);animation:lv 2s infinite}
+@keyframes lv{50%{box-shadow:0 0 0 11px rgba(26,127,55,.04)}}
+.dep .env .act{margin-left:auto;font-size:17px;color:#fff;background:var(--g);border-radius:99px;padding:3px 14px;font-weight:600;letter-spacing:.06em}
+.dep .tl{position:relative;display:flex;flex-direction:column;gap:0;margin-left:11px;border-left:2px solid #cfe8d8;padding-left:26px}
+.dep .ds{position:relative;display:flex;align-items:center;justify-content:space-between;padding:11px 0;font-size:21px;border-bottom:1px dashed #e4e8ec}
+.dep .ds:last-child{border-bottom:0}
+.dep .ds::before{content:"";position:absolute;left:-35px;width:14px;height:14px;border-radius:50%;background:var(--g);border:3px solid #fff;box-shadow:0 0 0 2px #cfe8d8}
+.dep .ds em{font-style:normal;color:var(--m);font-size:17px}
+.dep .url{margin-top:18px;display:flex;align-items:center;justify-content:space-between;font-size:21px;color:#0969da;padding:13px 18px;background:#f6f8fa;border:1px solid var(--b);border-radius:10px;font-weight:500}
+.dep .url span{background:var(--txt);color:#fff;font-size:17px;padding:4px 14px;border-radius:99px;font-weight:600}
+.s7b{padding-top:84px}
+.s7b h2{font-size:72px;margin-top:22px}
+.s7b .wrap{display:grid;grid-template-columns:1fr 640px;gap:36px;margin-top:28px;align-items:start}
+.gh .bh.bad{background:linear-gradient(180deg,#fff1f0,#f6f8fa)}
+.gh .bh .ic{width:24px;height:24px;flex:none}
+.gh .cr.skip,.gh .cr.skip b{color:#8c959f}
+.gh .btn{margin:0 26px 16px;display:flex;align-items:center;gap:14px;padding:12px 20px;border-radius:10px;background:#eaeef2;color:#6e7781;font-size:20px;font-weight:600;border:1px solid var(--b)}
+.gh .btn svg{width:20px;height:20px;stroke:#6e7781;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.bot{margin:0 26px 22px;border:1px solid var(--b);border-radius:12px;overflow:hidden}
+.bot .bh2{display:flex;align-items:center;gap:12px;padding:10px 18px;background:#f6f8fa;border-bottom:1px solid var(--b);font-size:19px}
+.bot .av{width:30px;height:30px;border-radius:50%;background:#1f2328;display:grid;place-items:center}
+.bot .av svg{width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.bot .bh2 b{font-weight:600}.bot .bh2 .tg{font-size:15px;border:1px solid var(--b);border-radius:99px;padding:1px 10px;color:var(--m)}
+.bot p{padding:14px 20px 16px;font-size:20px;line-height:1.45;color:#32383f}
+.bot p code{font:500 18px ui-monospace,Menlo,monospace;background:#eef1f4;border-radius:6px;padding:2px 7px}
+.rt{display:flex;flex-direction:column;gap:0;position:relative;padding-left:0}
+.rt::before{content:"";position:absolute;left:35px;top:40px;bottom:120px;width:3px;background:linear-gradient(180deg,var(--or),var(--gr));opacity:.35;border-radius:3px}
+.sp{display:flex;gap:22px;align-items:flex-start;padding:15px 0;position:relative}
+.sp .d{width:72px;height:72px;border-radius:22px;display:grid;place-items:center;flex:none;background:#fff;border:1px solid var(--line);box-shadow:0 12px 24px -14px rgba(40,20,15,.35);color:var(--or)}
+.sp .d svg{width:34px;height:34px}
+.sp.g .d{color:var(--gr)}.sp.k .d{color:var(--txt)}
+.sp h3{font-size:30px;font-weight:700;letter-spacing:-.01em;margin-top:2px}
+.sp p{font-size:21px;color:var(--mut);line-height:1.38;margin-top:2px}
+.never{margin-top:14px;padding:18px 24px;border-radius:16px;background:rgba(216,34,6,.07);border:1px solid rgba(216,34,6,.25);display:flex;gap:16px;align-items:center;font-size:21px;line-height:1.35}
+.never b{color:var(--or);font-weight:700;font-size:17px;letter-spacing:.14em;text-transform:uppercase;display:block;margin-bottom:2px}
+.never svg{width:34px;height:34px;color:var(--or);flex:none}
+.s7b .wrap{grid-template-columns:1fr 700px}
+.sum{margin:0 26px 16px;border:1px solid #f1c3c0;border-left:5px solid #cf222e;border-radius:10px;background:#fff8f7;padding:14px 20px}
+.sum h5{font-size:21px;font-weight:700;color:#a40e26;display:flex;align-items:center;gap:10px}
+.sum p{font-size:19px;color:#32383f;margin-top:6px;line-height:1.5}
+.sum code{font:500 17px ui-monospace,Menlo,monospace;background:#fde7e4;border-radius:6px;padding:2px 7px}
+.s7b .win{--mut:#9aa3b2;--bl:#8fb4ff;--txt:#f3f1ec;color:var(--txt);margin-top:14px}
+.s7b .win .code{margin:0;border:0;border-radius:0;background:#14161a;font-size:19px;padding:18px 24px 22px}
+.s7b .sp{padding:11px 0}.s7b .sp .d{width:62px;height:62px;border-radius:19px}.s7b .sp .d svg{width:30px;height:30px}
+.s7b .sp h3{font-size:28px}.s7b .sp p{font-size:20px}
+.s7b .sp p code{font:500 17px ui-monospace,Menlo,monospace;background:#eceae7;border-radius:5px;padding:1px 6px}
+.s7b .rt::before{display:none}
+.s9s{padding-top:84px}
+.s9s h2{font-size:72px;margin-top:22px}
+.s9s .wrap{display:grid;grid-template-columns:1fr 44px 1fr 44px 1fr;gap:0;margin-top:30px;align-items:stretch}
+.s9s .chev{display:grid;place-items:center;color:var(--or)}.s9s .chev svg{width:34px;height:34px;stroke-width:2.2}
+.sc{background:#fff;border:1px solid var(--line);border-radius:24px;box-shadow:0 30px 60px -34px rgba(40,20,15,.4);overflow:hidden;display:flex;flex-direction:column}
+.sc .lbl{display:flex;align-items:center;gap:12px;padding:16px 24px;font-size:22px;font-weight:700;border-bottom:1px solid var(--line);background:#faf8f6}
+.sc .lbl svg{width:26px;height:26px;color:var(--or)}
+.sc .bd{padding:22px 24px 26px;flex:1;display:flex;flex-direction:column;gap:16px;font-size:21px}
+.ed{flex:none;background:#1d1f23;border-radius:14px;overflow:hidden;padding-bottom:6px;font:400 19px/1.7 ui-monospace,Menlo,Consolas,monospace;color:#d6dae1}
+.ed .tab{background:#272a30;color:#c3c8d0;font:500 16px var(--sans);padding:8px 16px}
+.ed .ln{display:flex;gap:18px;padding:0 16px}.ed .ln i{font-style:normal;color:#6b7280;width:22px;text-align:right}
+.ed .bad{background:rgba(255,123,114,.16)}
+.ed .bad u{text-decoration:underline wavy #ff7b72;text-underline-offset:5px}
+.ed .k{color:#ff9d8a}.ed .v{color:#8ee0b0}
+.pbox{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:19px}.pbox .pbh{background:#f3f1ee;padding:7px 16px;font:700 15px var(--sans);letter-spacing:.12em;color:var(--mut)}.pbox .pbh b{background:#cf222e;color:#fff;border-radius:99px;padding:0 8px;margin-left:6px}.pbox .pr{display:flex;gap:12px;align-items:center;padding:11px 16px}.pbox .pr svg{width:22px;height:22px;flex:none}.pbox .pr span{color:var(--mut);margin-left:6px}
+.toast{border:1px solid #f1c3c0;border-left:5px solid #cf222e;background:#fff8f7;border-radius:12px;padding:14px 18px}
+.toast b{font-size:22px;color:#a40e26;display:flex;align-items:center;gap:10px}
+.toast b svg{width:24px;height:24px}
+.toast p{font-size:19px;color:#32383f;margin-top:4px}
+.toast .bt{display:inline-block;margin-top:10px;background:var(--or);color:#fff;border-radius:99px;padding:6px 18px;font-weight:600;font-size:18px}
+.bub{border-radius:18px;padding:14px 18px;line-height:1.4;max-width:92%}
+.bub.u{background:#eceae7;align-self:flex-end}
+.bub.a{background:#fff8f6;border:1px solid #f3d3cd}
+.bub.a .who{font-size:15px;font-weight:700;letter-spacing:.12em;color:var(--or);margin-bottom:4px}
+.okl{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+.okl div{display:flex;gap:10px;align-items:center;font-size:20px}
+.okl svg{width:22px;height:22px;flex:none}
+.chp{align-self:flex-start;font-size:17px;font-weight:600;color:var(--mut);border:1px solid var(--line);border-radius:99px;padding:4px 14px;background:#fff}
+.info{border:1px solid #c8d9f0;border-left:5px solid #0969da;background:#f3f8ff;border-radius:12px;padding:14px 18px;font-size:20px;line-height:1.4}
+.info b{display:block;margin-bottom:2px;color:#0b4fa8}
+.s9s .never{margin-top:22px;flex-direction:row;align-items:center;gap:28px;padding:20px 28px}
+.s9s .never .t1{font-size:23px;font-weight:700;line-height:1.3}
+.s9s .never .t1 small{display:block;font-size:19px;color:var(--mut);font-weight:400;margin-top:2px}
+.s9s .never .sep{width:2px;align-self:stretch;background:rgba(216,34,6,.25)}
+/* 8 */
+.s8 .wrap{display:grid;grid-template-columns:600px 1fr;gap:70px;align-items:center;height:780px;margin-top:-60px}
+.s8 h2{font-size:84px}
+.browser{background:#f6f5f1;border-radius:24px;overflow:hidden;box-shadow:0 50px 100px -30px rgba(40,20,15,.45);color:#1f2328;height:640px;display:flex;flex-direction:column}
+.browser .top{display:flex;align-items:center;gap:14px;padding:16px 24px;background:#e9e7e1;border-bottom:1px solid #d8d5cc}
+.browser .top i{width:13px;height:13px;border-radius:50%;background:#c7c3b8}
+.browser .url{flex:1;margin-left:14px;background:#fff;border-radius:99px;padding:8px 22px;font:400 17px var(--mono);color:#6c7488}
+.browser .hd{display:flex;justify-content:space-between;align-items:center;padding:16px 28px;background:#1f2328;color:#fff;font-weight:600;font-size:22px}
+.browser .hd small{font:400 15px var(--mono);color:#8fa0c8;margin-left:10px}
+.browser .hd .sso{font:500 15px var(--mono);background:rgba(22,145,92,.18);color:#4ade9b;padding:6px 14px;border-radius:99px}
+.browser .bd{flex:1;display:grid;grid-template-columns:230px 1fr}
+.nav{padding:20px;border-right:1px solid #ddd9cf;font-size:19px;display:flex;flex-direction:column;gap:7px;background:#efede7}
+.nav b{font-weight:600;margin-top:8px;font-size:17px;color:#1f2328}
+.nav span{padding:7px 12px;border-radius:9px;color:#4a5470}
+.nav span.a{background:#d82206;color:#fff;font-weight:600}
+.apps{padding:26px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-content:start}
+.ap{background:#fff;border:1px solid #e1ddd2;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:10px;font-weight:600;font-size:19px}
+.ap svg{width:30px;height:30px;stroke:#d82206;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ap.new{border:2px dashed #d82206;background:#fdeeea;color:#d82206;animation:blink 2.8s infinite}
+.ap.new small{font:400 13.5px var(--mono);color:#d82206}
+@keyframes blink{50%{background:#fad9d2}}
+
+/* 9 */
+.s9 .wrap{display:grid;grid-template-columns:1fr 760px;gap:60px;align-items:center;height:820px;margin-top:-50px}
+.s9 h2{font-size:110px}
+.rules{display:flex;flex-direction:column;gap:20px;margin-top:50px}
+.rule{display:flex;align-items:center;gap:26px;padding:24px 30px;font-size:29px;font-weight:500}
+.rings{position:relative;width:760px;height:760px;margin-top:-30px}
+.ring{position:absolute;border-radius:50%;display:flex;justify-content:center;font:500 19px var(--mono);letter-spacing:.14em;padding-top:26px}
+.ring.r1{inset:0;border:2px solid rgba(30,35,45,.45);background:radial-gradient(circle,rgba(30,35,45,.05),rgba(30,35,45,.12));color:var(--bl)}
+.ring.r2{inset:110px;border:2px solid rgba(216,34,6,.5);background:rgba(216,34,6,.07);color:var(--or)}
+.ring.r3{inset:230px;border:2px solid rgba(22,145,92,.55);background:#fff;color:var(--gr);flex-direction:column;align-items:center;justify-content:center;padding:0;text-align:center;gap:12px;font-size:22px}
+.ring.r3 svg{width:60px;height:60px;stroke:var(--gr)}
+.ring.r3 small{color:var(--mut);letter-spacing:.04em;font-size:18px;line-height:1.5;font-weight:400}
+.dot{position:absolute;width:20px;height:20px;border-radius:50%;background:var(--or);box-shadow:0 0 0 8px rgba(216,34,6,.2)}
+.on .ring.r1{animation:spin 40s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.s9b h2{font-size:84px}
+.s9b svg.dg{display:block;width:1680px;height:640px;margin-top:24px;font-family:var(--sans);overflow:visible}
+.dg .nd{fill:#fff;stroke:#d9d3cf;stroke-width:1.5;filter:drop-shadow(0 14px 22px rgba(40,20,15,.12))}
+.dg .gw{fill:#d82206;filter:drop-shadow(0 18px 28px rgba(216,34,6,.35))}
+.dg .sso{fill:#eceaf0;stroke:#c9c4d1;stroke-width:1.5}
+.dg .pn{fill:#1f2328}
+.dg .t1{font-size:29px;font-weight:700;fill:#1d1f23}
+.dg .t2{font-size:19px;fill:#5b616c}
+.dg .w1{font-size:29px;font-weight:700;fill:#fff}.dg .w2{font-size:19px;fill:rgba(255,255,255,.88)}
+.dg .tag{font-size:15px;letter-spacing:.14em;fill:#9a9fa8;font-weight:600}
+.dg .gtag{fill:rgba(255,255,255,.75)}
+.dg .ed{stroke:#1d1f23;stroke-width:2.2;fill:none;marker-end:url(#ah)}
+.dg .edd{stroke:#d82206;stroke-width:2.2;fill:none;marker-end:url(#ahr)}
+.dg .lb{font-size:18px;fill:#3b4350;font-weight:500}
+.dg .lbg{fill:#f7f4f2}
+.dg .bd{fill:none;stroke:#b9b3ae;stroke-width:2;stroke-dasharray:10 8}
+.dg .bt{font-size:20px;font-weight:700;fill:#8a8f98;letter-spacing:.04em}
+.s9b h2{font-size:80px}
+.jr{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:44px;align-items:stretch}
+.jc{position:relative;background:#fff;border:1px solid var(--line);border-radius:26px;box-shadow:0 30px 60px -36px rgba(40,20,15,.4);padding:26px 24px 28px;display:flex;flex-direction:column;gap:14px;margin-right:34px}
+.jc:last-child{margin-right:0}
+.jc::after{content:"";position:absolute;right:-30px;top:50%;width:26px;height:26px;margin-top:-13px;background:var(--or);clip-path:polygon(0 0,100% 50%,0 100%,25% 50%)}
+.jc:last-child::after{display:none}
+.jc.hot{background:linear-gradient(160deg,#e62d10,#c21d05);border:0;color:#fff;box-shadow:0 36px 70px -30px rgba(216,34,6,.7)}
+.jc .vis{height:150px;border-radius:16px;background:#f5f2ef;display:grid;place-items:center;overflow:hidden;position:relative}
+.jc.hot .vis{background:rgba(255,255,255,.14)}
+.jc h3{font-size:30px;font-weight:700;letter-spacing:-.01em}
+.jc p{font-size:21px;line-height:1.38;color:var(--mut)}
+.jc.hot p{color:rgba(255,255,255,.88)}
+.jc .who{display:flex;align-items:center;gap:10px;font:600 17px var(--sans);letter-spacing:.1em;color:var(--or);text-transform:uppercase}
+.jc.hot .who{color:#fff}
+.jc .who svg{width:20px;height:20px}
+.mb{width:84%;background:#fff;border-radius:10px;box-shadow:0 10px 22px -10px rgba(0,0,0,.35);overflow:hidden;font-size:15px;color:#1d1f23}
+.mb .u{background:#e9e7e3;padding:6px 10px;font-size:13px;color:#6b7280}
+.mb .b{padding:12px 12px 14px;display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+.mb .btn{background:var(--or);color:#fff;border-radius:99px;padding:5px 14px;font-weight:600;font-size:14px}
+.mb .ln{height:7px;border-radius:4px;background:#e4e1dc;width:100%}
+.mb .f{width:100%;height:20px;border-radius:5px;border:1px solid #d6d2cc;background:#fff;font-size:12px;color:#9a9fa8;padding:2px 8px}
+.mb .g{background:#1d1f23;color:#fff;border-radius:99px;padding:5px 14px;font-weight:600;font-size:14px;text-align:center;width:100%}
+.chip2{display:inline-flex;align-items:center;gap:8px;background:#fff;border-radius:99px;padding:7px 14px;font:600 16px var(--sans);color:#1d1f23;box-shadow:0 8px 18px -10px rgba(0,0,0,.4)}
+.chip2.dk{background:#1d1f23;color:#fff}
+.chip2 svg{width:18px;height:18px}
+.stk{display:flex;flex-direction:column;gap:9px;align-items:flex-start}
+.jbar{margin-top:34px;display:flex;gap:20px}
+.jbar .card{flex:1;padding:22px 28px;display:flex;gap:18px;align-items:center;font-size:23px;line-height:1.3}
+.jbar .card b{display:block;font-size:24px}
+.jbar .card small{font-size:19px;color:var(--mut)}
+.s9 .zt{display:grid;grid-template-columns:1000px 1fr;gap:40px;margin-top:-10px;align-items:center;height:760px}
+.s9 h2{font-size:92px}
+.lay{position:relative;width:1000px;height:640px;margin-top:10px}
+.ly{position:absolute;border-radius:34px;padding:22px 30px}
+.ly .nm{font:700 20px var(--sans);letter-spacing:.14em;text-transform:uppercase;display:flex;align-items:center;gap:10px}
+.ly .nm svg{width:24px;height:24px}
+.ly .sb{font-size:19px;color:var(--mut);margin-top:3px}
+.l1{left:240px;top:0;width:760px;height:640px;background:linear-gradient(160deg,#eef0f3,#e3e6ea);border:2px solid #b8bec7;box-shadow:0 40px 80px -40px rgba(30,35,45,.5)}
+.l1 .nm{color:#3b4350}
+.l2{left:300px;top:110px;width:640px;height:490px;background:linear-gradient(160deg,#fde9e5,#fbd5ce);border:2px solid rgba(216,34,6,.55)}
+.l2 .nm{color:var(--or)}
+.l2 .apx{display:flex;gap:10px;margin-top:14px}
+.l2 .apx i{font-style:normal;background:#fff;border-radius:99px;padding:5px 14px;font-size:17px;font-weight:600;color:#1d1f23;box-shadow:0 6px 14px -8px rgba(0,0,0,.35)}
+.l3{left:360px;top:300px;width:520px;height:250px;background:#fff;border:2px solid rgba(22,145,92,.7);box-shadow:0 20px 40px -24px rgba(22,145,92,.5)}
+.l3 .nm{color:var(--gr)}
+.l3 .ks{display:grid;grid-template-columns:1fr 1fr;gap:16px 18px;margin:24px 0 0 20px;font-size:21px;font-weight:600}
+.l3 .ks span{display:flex;align-items:center;gap:10px}.l3 .ks svg{width:22px;height:22px;color:var(--gr)}
+.rb{position:absolute;left:0;width:240px}
+.rb .lb{display:inline-block;font:700 16px/1.25 var(--sans);letter-spacing:.06em;padding:8px 14px;border-radius:12px;color:#fff;box-shadow:0 12px 22px -10px rgba(0,0,0,.45)}
+.rb .tx{font-size:19px;font-weight:600;margin-top:8px}
+.rb .ln{position:absolute;top:21px;height:4px;border-radius:3px}
+
+.rb.a .lb{background:#1d1f23}.rb.u .lb{background:var(--gr)}
+.rb.a .tx{color:var(--or)}.rb.u .tx{color:var(--gr)}
+.rb .pt{position:absolute;width:46px;height:46px;border-radius:50%;color:#fff;display:grid;place-items:center;z-index:3}
+.rb .pt svg{width:26px;height:26px;stroke-width:3}
+.rb.a .ln{left:220px;width:20px;display:none}
+.xl{position:absolute;left:0;top:132px;width:240px;height:4px;background:repeating-linear-gradient(90deg,#1d1f23 0 12px,transparent 12px 20px)}
+.xp{position:absolute;left:218px;top:111px;width:46px;height:46px;border-radius:50%;background:var(--or);color:#fff;display:grid;place-items:center;box-shadow:0 0 0 8px rgba(216,34,6,.2);animation:lv 2s infinite;z-index:3}
+.xp svg{width:26px;height:26px;stroke-width:3}
+.ul{position:absolute;left:0;top:392px;width:360px;height:4px;background:var(--gr);border-radius:3px}
+.up{position:absolute;left:337px;top:371px;width:46px;height:46px;border-radius:50%;background:var(--gr);color:#fff;display:grid;place-items:center;z-index:3;box-shadow:0 0 0 8px rgba(22,145,92,.2)}
+.up svg{width:26px;height:26px;stroke-width:3}
+.lt{position:absolute;left:0;font-size:19px;font-weight:600;width:230px;line-height:1.3}
+.pr4{display:flex;flex-direction:column;gap:16px}
+.pc{display:flex;gap:20px;align-items:center;padding:20px 26px;background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:0 14px 30px -20px rgba(40,20,15,.4)}
+.pc .ico{width:60px;height:60px;border-radius:18px}.pc .ico svg{width:30px;height:30px}
+.pc b{display:block;font-size:28px;font-weight:700;letter-spacing:-.01em}
+.pc span{font-size:21px;color:var(--mut);line-height:1.35}
+/* 10 */
+.cmp{display:grid;grid-template-columns:1.25fr 1fr;gap:32px;margin-top:90px}
+.cmp .card{padding:52px 50px;min-height:420px}
+.cmp .yes{border-color:rgba(22,145,92,.45);background:linear-gradient(160deg,rgba(22,145,92,.1),var(--card))}
+.cmp .no{opacity:.75}
+.cmp h3{font-size:48px;font-weight:700;letter-spacing:-.025em;display:flex;align-items:center;gap:20px}
+.cmp h3 .ico{width:56px;height:56px}
+.cmp p.s{font:500 21px var(--mono);color:var(--mut);margin-top:12px}
+.cmp ul{list-style:none;margin-top:30px;display:flex;flex-direction:column;gap:16px}
+.cmp li{font-size:26px;display:flex;gap:16px;align-items:center;color:var(--txt)}
+.cmp .no li{color:var(--mut)}
+.cmp li svg{width:28px;height:28px;stroke-width:2.4;flex:none}
+.test{margin-top:36px;padding:28px 40px;display:flex;align-items:center;gap:28px;font-size:30px;border-color:rgba(216,34,6,.4);background:rgba(216,34,6,.07)}
+.test b{color:var(--or)}
+
+/* 11 */
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:26px;margin-top:90px}
+.ap-c{padding:38px 34px;display:flex;flex-direction:column;gap:14px;min-height:340px;position:relative;overflow:hidden}
+.ap-c .code{font:700 70px/1 var(--mono);color:var(--or);letter-spacing:-.04em}
+.ap-c h3{font-size:34px;font-weight:600;line-height:1.1;letter-spacing:-.02em;margin-top:8px}
+.ap-c p{font-size:26px;color:var(--mut);line-height:1.4}
+.ap-c::after{content:"";position:absolute;left:0;right:0;bottom:0;height:5px;background:linear-gradient(90deg,var(--or),var(--or2))}
+.dur{margin-top:44px;position:relative;height:100px;border-radius:24px;border:2px dashed rgba(216,34,6,.55);background:rgba(216,34,6,.07);display:flex;align-items:center;justify-content:center;gap:26px;font-size:30px;font-weight:600}
+.dur span{font:500 21px var(--mono);color:var(--mut);font-weight:400}
+
+/* 12 */
+.g3b{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;margin-top:64px}
+.demo{padding:0;overflow:hidden;display:flex;flex-direction:column}
+.demo .pv{height:250px;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#fdeeea,#fff);position:relative;border-bottom:1px solid var(--line)}
+.demo .pv svg{width:110px;height:110px;stroke:var(--or);fill:none;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
+.demo .pv .tag{position:absolute;left:24px;top:22px}
+.demo .tx{padding:34px 36px 40px}
+.demo h3{font-size:42px;font-weight:700;letter-spacing:-.025em}
+.demo .src{font:500 21px var(--mono);color:var(--bl);margin-top:10px}
+.demo p{font-size:23px;color:var(--mut);margin-top:18px;line-height:1.4}
+.more{margin-top:34px;font:400 22px var(--mono);color:var(--dim)}
+.more b{color:var(--mut);font-weight:500}
+
+/* 13 */
+.gantt{margin-top:44px;position:relative}
+.gantt .hdr,.gr-row{display:grid;grid-template-columns:270px 1fr;align-items:center}
+.cols14{display:grid;grid-template-columns:repeat(14,1fr)}
+.hdr .yr{display:grid;grid-template-columns:10fr 4fr;font:600 17px var(--sans);letter-spacing:.14em;color:var(--or);margin-bottom:6px}
+.hdr .yr span{padding-left:8px;border-left:2px solid var(--or)}
+.hdr .wk div{font:500 20px var(--sans);color:var(--mut);text-align:center;padding:6px 0}
+.hdr .wk div.pz{color:var(--dim)}
+.gr-row{height:80px;border-top:1px solid var(--line)}
+.gr-row .nm{font-size:30px;font-weight:600;line-height:1.1}
+.gr-row .nm small{display:block;font:400 18px var(--sans);color:var(--mut);margin-top:3px}
+.gr-row .tk{position:relative;height:100%;background:repeating-linear-gradient(90deg,transparent 0,transparent calc(100%/14 - 1px),var(--line) calc(100%/14 - 1px),var(--line) calc(100%/14))}
+.gr-row .bar3{position:absolute;top:19px;height:42px;border-radius:12px;background:var(--bl);left:var(--l);width:0;transition:width 1.2s cubic-bezier(.2,.7,.2,1) calc(.5s + var(--i)*.14s)}
+.on .gr-row .bar3{width:var(--w)}
+.gr-row.p .bar3{background:linear-gradient(90deg,var(--or),var(--or2))}
+.gr-row.h .bar3{background:linear-gradient(90deg,var(--gr),#5fd0a0)}
+.gr-row.k .bar3{background:repeating-linear-gradient(135deg,#3b4350 0 12px,#4b5462 12px 24px)}
+.gr-row .bar3.ms{width:42px!important;border-radius:50%;margin-left:calc(var(--w)/2 - 21px)}
+.pause{position:absolute;top:0;bottom:0;left:calc(270px + (100% - 270px)*8/14);width:calc((100% - 270px)*2/14);background:repeating-linear-gradient(135deg,rgba(30,20,20,.05) 0 10px,transparent 10px 20px);border-left:1px dashed var(--dim);border-right:1px dashed var(--dim);display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px;font:500 17px var(--sans);letter-spacing:.1em;color:var(--dim);pointer-events:none}
+.abg{position:absolute;right:0;top:-6px;bottom:0;width:3px;background:var(--or);pointer-events:none}
+.sched{display:flex;gap:44px;margin-top:26px;font:500 22px var(--sans);color:var(--mut);align-items:center}
+.sched span{display:flex;align-items:center;gap:12px}.sched i{width:14px;height:14px;border-radius:4px}
+.sched b{color:var(--or);font-weight:600}
+/* 13b KI-Test */
+.chk{display:flex;flex-wrap:wrap;gap:16px;margin-top:20px}
+.chk .pill{font-size:23px}
+.s13b .flow{margin-top:56px}.s13b .step{min-height:300px}
+.s13b h3.k{font:600 20px var(--sans);letter-spacing:.2em;color:var(--or);text-transform:uppercase;margin-top:56px}
+.loop{display:flex;align-items:center;gap:14px;margin-top:34px;font:500 24px var(--sans);color:var(--or)}
+.loop svg{width:30px;height:30px}
+.s13b{padding-top:84px}
+.s13b h2{font-size:76px;margin-top:22px}
+.fl{display:flex;align-items:center;margin-top:34px}
+.fn{display:flex;align-items:center;gap:16px;background:#fff;border:1px solid var(--line);border-radius:20px;padding:14px 22px;box-shadow:0 14px 30px -20px rgba(40,20,15,.4);font-size:24px;font-weight:700;white-space:nowrap}
+.fn .ico{width:48px;height:48px;border-radius:14px}.fn .ico svg{width:24px;height:24px}
+.fn small{display:block;font-size:17px;font-weight:500;color:var(--mut)}
+.fn.hot{background:var(--or);color:#fff;border-color:var(--or)}.fn.hot small{color:rgba(255,255,255,.85)}.fn.hot .ico{background:rgba(255,255,255,.2);color:#fff}
+.fa{flex:1;height:3px;margin:0 8px;background:var(--or);opacity:.5;position:relative;min-width:20px}
+.fa::after{content:"";position:absolute;right:-2px;top:-6px;border-left:10px solid var(--or);border-top:7px solid transparent;border-bottom:7px solid transparent}
+.back{display:flex;align-items:center;gap:12px;margin-top:14px;font-size:21px;font-weight:700;color:var(--or);padding-left:6px}
+.back::before{content:"";flex:none;width:26px;height:26px;border:3px solid var(--or);border-right-color:transparent;border-radius:50%}
+.back span{font-weight:500;color:var(--mut)}
+.sc2{margin-top:22px;background:#fff;border:1px solid var(--line);border-radius:26px;box-shadow:0 36px 70px -38px rgba(40,20,15,.5);overflow:hidden}
+.sc2 .h{display:grid;grid-template-columns:1fr repeat(3,170px);align-items:center;padding:16px 28px;background:#faf8f6;border-bottom:1px solid var(--line);font-size:22px;font-weight:700}
+.sc2 .h span{text-align:center;font-size:18px;color:var(--mut);letter-spacing:.08em;text-transform:uppercase}
+.sc2 .h em{font-style:normal;color:var(--mut);font-weight:500;font-size:19px;margin-left:12px}
+.sc2 .r{display:grid;grid-template-columns:1fr repeat(3,170px);align-items:center;padding:9px 28px;border-bottom:1px solid #f0ece8;font-size:23px;font-weight:500}
+.sc2 .r i{justify-self:center;width:30px;height:30px;border-radius:50%;display:grid;place-items:center}
+.sc2 .r i.g{background:#e3f4ea}.sc2 .r i.x{background:#fde3df}
+.sc2 .r i svg{width:18px;height:18px;stroke-width:3}.sc2 .r i.g svg{color:#16915c}.sc2 .r i.x svg{color:#cf222e}
+.sc2 .tot{display:grid;grid-template-columns:1fr repeat(3,170px);align-items:center;padding:16px 28px;background:#1d1f23;color:#fff;font-size:22px;font-weight:700}
+.sc2 .tot div{text-align:center}.sc2 .tot div:first-child{text-align:left}
+.sc2 .tot b{font-size:34px;letter-spacing:-.02em}.sc2 .tot .lo{color:#ff8a78}.sc2 .tot .hi{color:#6fe3a8}.sc2 .tot .md{color:#ffd37a}
+.s13b .fl{display:none}.s13b .back,.s13b .sc2{display:none}
+.s13b .stp2{display:flex;align-items:center;gap:14px;margin-top:30px;font-size:22px;font-weight:600;color:var(--mut)}
+.s13b .stp2 span{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:99px;padding:8px 20px 8px 14px;box-shadow:0 8px 18px -12px rgba(40,20,15,.35);color:#1d1f23}
+.s13b .stp2 svg{width:22px;height:22px;color:var(--or)}
+.s13b .stp2 b{color:var(--or);font-size:26px}
+
+/* 13b Phasen: Erklärung -> Läufe (per Taste ›) */
+.s13b .swap{display:grid;margin-top:56px}
+.s13b .swap>*{grid-area:1/1}
+.s13b .runs{margin-top:0}
+.s13b .brief{display:flex;flex-direction:column;gap:30px;transition:opacity .5s ease,transform .5s ease,visibility 0s}
+.s13b .bg4{display:grid;grid-template-columns:repeat(4,1fr);gap:30px}
+.s13b .bc{position:relative;padding:32px 32px 34px;display:flex;flex-direction:column;gap:14px;min-height:360px;border-radius:30px;box-shadow:0 36px 70px -44px rgba(40,20,15,.5)}
+.s13b .bc .top{display:flex;align-items:center;margin-bottom:10px}
+.s13b .bc .nb{font:700 20px var(--sans);letter-spacing:.18em;color:var(--dim)}
+.s13b .bc h3{font-size:34px;font-weight:700;letter-spacing:-.02em;line-height:1.1}
+.s13b .bc p{font-size:23px;line-height:1.42;color:var(--mut)}
+.s13b .bc p b{color:var(--txt);font-weight:600}
+.s13b .bc:not(:last-child)::after{content:"›";position:absolute;right:-30px;top:50%;width:30px;margin-top:-15px;text-align:center;font:600 30px/30px var(--sans);color:var(--or);z-index:2}
+.s13b .bc.sc{background:linear-gradient(160deg,rgba(216,34,6,.1),rgba(216,34,6,.02));border-color:rgba(216,34,6,.4)}
+.s13b .bc.sc .nb{color:var(--or)}
+.s13b .bc .ico{width:60px;height:60px}
+.s13b .tkw{display:flex;align-items:center;gap:22px;padding:24px 34px;border-radius:24px;background:#1d1f23;color:#fff;font-size:26px;font-weight:500;box-shadow:0 30px 60px -36px rgba(20,10,10,.7)}
+.s13b .tkw .ic{width:48px;height:48px;border-radius:14px;background:var(--or);display:grid;place-items:center;flex:none}
+.s13b .tkw .ic svg{width:26px;height:26px;color:#fff}
+.s13b .tkw b{color:#ff9a88;font-weight:700}
+.s13b.k1 .brief{opacity:0;transform:translateY(-26px);visibility:hidden;pointer-events:none;transition:opacity .45s ease,transform .45s ease,visibility 0s .45s}
+.s13b .rn,.s13b .fx{opacity:0;transform:translateY(34px) scale(.97);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+.s13b.k1 .lr1{opacity:1;transform:none;transition-delay:.4s}
+.s13b.k2 .lf1{opacity:1;transform:none;transition-delay:0s}
+.s13b.k2 .lr2{opacity:1;transform:none;transition-delay:.25s}
+.s13b.k3 .lf2{opacity:1;transform:none;transition-delay:0s}
+.s13b.k3 .lr3{opacity:1;transform:none;transition-delay:.25s}
+.s13b.on .rg .fg{stroke-dashoffset:var(--c);transition:stroke-dashoffset 1.5s cubic-bezier(.2,.7,.2,1) .6s}
+.s13b.on.k1 .lr1 .fg,.s13b.on.k2 .lr2 .fg,.s13b.on.k3 .lr3 .fg{stroke-dashoffset:var(--o)}
+.s13b .rn .pc2,.s13b .rn .cnt,.s13b .rn .ms{transition:opacity .6s ease .9s}
+.s13b .rn .lb{margin-bottom:2px}
+.s13b .tg{display:grid;margin-top:10px;font:600 17px var(--sans);letter-spacing:.04em}
+.s13b .tg span{grid-area:1/1;display:flex;align-items:center;justify-content:center;gap:8px;padding:6px 14px;border-radius:99px;background:rgba(30,20,20,.06);color:var(--mut);transition:opacity .6s ease}
+.s13b .tg svg{width:18px;height:18px}
+.s13b .tg .a{opacity:0;background:rgba(216,34,6,.12);color:var(--or)}
+.s13b .rn.fin .tg span{background:rgba(255,255,255,.16);color:#fff}
+.s13b.k4 .tg .m{opacity:0}.s13b.k4 .tg .a{opacity:1}
+.s13b .ab{display:flex;align-items:center;gap:22px;margin-top:20px;padding:16px 34px;border-radius:24px;background:#1d1f23;color:#fff;font-size:26px;font-weight:500;box-shadow:0 30px 60px -36px rgba(20,10,10,.7);opacity:0;transform:translateY(24px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+.s13b .ab .ic{width:44px;height:44px;border-radius:13px;background:var(--or);display:grid;place-items:center;flex:none}
+.s13b .ab .ic svg{width:24px;height:24px;color:#fff}
+.s13b .ab b{color:#ff9a88;font-weight:700}
+.s13b.k4 .ab{opacity:1;transform:none;transition-delay:.3s}
+.s13b .sdots{position:absolute!important;left:50%;bottom:50px;transform:translateX(-50%);display:flex;gap:12px}
+.s13b .sdots i{width:10px;height:10px;border-radius:99px;background:rgba(30,20,20,.16);transition:width .4s ease,background .4s ease}
+.s13b .sdots i.on{width:34px;background:var(--or)}
+.runs{display:grid;grid-template-columns:1fr 150px 1fr 150px 1fr;margin-top:56px;align-items:stretch}
+.rn{background:#fff;border:1px solid var(--line);border-radius:30px;box-shadow:0 36px 70px -40px rgba(40,20,15,.55);padding:22px 30px 22px;display:flex;flex-direction:column;align-items:center;position:relative}
+.rn .lb{font:700 19px var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--mut)}
+.rn{justify-content:flex-start}.rn .rgw{position:relative;width:204px;height:204px;margin:14px 0 10px;flex:none}.rn svg.rg{width:100%;height:100%;transform:rotate(-90deg)}
+.rg .bg{fill:none;stroke:#efebe7;stroke-width:18}
+.rg .fg{fill:none;stroke-width:18;stroke-linecap:round;stroke-dasharray:var(--c);stroke-dashoffset:var(--c);transition:stroke-dashoffset 1.6s cubic-bezier(.2,.7,.2,1) calc(.7s + var(--k)*.45s)}
+.on .rg .fg{stroke-dashoffset:var(--o)}
+.rn .pc2{position:absolute;inset:0;display:grid;place-items:center;font-size:54px;font-weight:700;letter-spacing:-.03em;line-height:1}
+.rn .cnt{font-size:24px;font-weight:600;margin-top:2px}
+.rn .cnt span{color:var(--mut);font-weight:500}
+.rn .ms{display:flex;flex-direction:column;gap:8px;margin-top:16px;width:100%;min-height:50px}
+.rn .ms i{font-style:normal;display:flex;align-items:center;gap:10px;font-size:20px;font-weight:600;padding:8px 14px;border-radius:12px;background:#fdebe8;color:#a40e26}
+.rn .ms i svg{width:18px;height:18px;stroke-width:3;flex:none}
+.rn .ms i.ok{background:#e3f4ea;color:#136c34}
+.rn.fin{background:radial-gradient(500px 400px at 85% 0%,#ee3a1c,transparent 60%),linear-gradient(150deg,#d82206,#b01a04);border:0;color:#fff;box-shadow:0 40px 80px -36px rgba(216,34,6,.75)}
+.rn.fin .lb{color:rgba(255,255,255,.8)}.rn.fin .bg{stroke:#fff;fill:#fff}.rn.fin .cnt span{color:rgba(255,255,255,.6)}
+.fx{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:0 6px}
+.fx .ar{width:100%;height:4px;background:var(--or);border-radius:3px;position:relative}
+.fx .ar::after{content:"";position:absolute;right:-3px;top:-8px;border-left:14px solid var(--or);border-top:10px solid transparent;border-bottom:10px solid transparent}
+.fx b{font-size:19px;line-height:1.25;color:var(--or);font-weight:700}
+.fx small{font-size:16px;color:var(--mut);letter-spacing:.08em;text-transform:uppercase;font-weight:600}
+
+/* 13c Prüf-Kreislauf */
+.s13c{padding-top:84px}
+.s13c h2{font-size:76px;margin-top:22px}
+.s13c .cyc{display:grid;grid-template-columns:repeat(4,1fr);gap:30px;margin-top:40px}
+.s13c .cd{position:relative;padding:30px 32px 32px;display:flex;flex-direction:column;gap:12px;min-height:310px;border-radius:30px;box-shadow:0 36px 70px -44px rgba(40,20,15,.5)}
+.s13c .cd .ico{width:60px;height:60px;margin-bottom:8px}
+.s13c .cd h3{font-size:34px;font-weight:700;letter-spacing:-.02em;line-height:1.1}
+.s13c .cd .who{font:600 17px var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.s13c .cd p{font-size:22px;line-height:1.42;color:var(--mut)}
+.s13c .cd p b{color:var(--txt);font-weight:600}
+.s13c .cd:not(:last-child)::after{content:"›";position:absolute;right:-30px;top:50%;width:30px;margin-top:-15px;text-align:center;font:600 30px/30px var(--sans);color:var(--or);z-index:2}
+.s13c .cd.pr{background:#fff}
+.s13c .lg{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.s13c .lg i{font-style:normal;display:flex;align-items:center;gap:10px;font-size:19px;font-weight:600;padding:8px 14px;border-radius:12px;background:#fdebe8;color:#a40e26;line-height:1.2}
+.s13c .lg i svg{width:17px;height:17px;stroke-width:3;flex:none}
+.s13c .lg i span{font-weight:500;color:#7a3a33}
+.s13c .cd.nx{background:linear-gradient(160deg,rgba(216,34,6,.1),rgba(216,34,6,.02));border-color:rgba(216,34,6,.4)}
+.s13c .lp{position:relative;height:104px}
+.s13c .lp svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.s13c .lp path{fill:none;stroke:var(--or);stroke-width:3;stroke-linecap:round;stroke-dasharray:6 9;opacity:.75}
+.s13c .lp .lbl2{position:absolute;left:50%;top:66px;transform:translate(-50%,-50%);display:flex;align-items:center;gap:12px;background:#fff;border:1px solid rgba(216,34,6,.35);color:var(--or);font:700 22px var(--sans);padding:10px 26px;border-radius:99px;box-shadow:0 12px 26px -16px rgba(216,34,6,.55);white-space:nowrap}
+.s13c .lp .lbl2::before{content:"";width:20px;height:20px;border:3px solid var(--or);border-right-color:transparent;border-radius:50%;animation:spin 3s linear infinite}
+.s13c .fn2{display:grid;grid-template-columns:1fr 640px;gap:56px;align-items:center;margin-top:0;padding:26px 48px;border-radius:30px;background:#1d1f23;color:#fff;box-shadow:0 40px 80px -44px rgba(20,10,10,.8)}
+.s13c .fn2 .k{font:600 17px var(--sans);letter-spacing:.2em;text-transform:uppercase;color:#ff9a88}
+.s13c .fn2 h3{font-size:42px;font-weight:700;letter-spacing:-.02em;line-height:1.08;margin-top:10px}
+.s13c .fn2 h3 em{font-style:normal;color:#ff9a88}
+.s13c .fn2 p{font-size:23px;line-height:1.45;color:rgba(255,255,255,.72);margin-top:12px}
+.s13c .fn2 p b{color:#fff;font-weight:600}
+.s13c .tm{background:#0f1114;border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:16px 24px;font:500 20px/1.55 ui-monospace,Menlo,monospace;color:#c9cdd3}
+.s13c .tm .cmt{color:#7d838c}.s13c .tm .ok{color:#6fe3a8}.s13c .tm b{color:#fff}
+.s13c [data-k]{opacity:0;transform:translateY(30px) scale(.97);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+.s13c.k1 [data-k="1"],.s13c.k2 [data-k="2"],.s13c.k3 [data-k="3"]{opacity:1;transform:none;transition-delay:.15s}
+.s13c.k2 [data-k="2"]+[data-k="2"]{transition-delay:.4s}
+.s13c.k2 .lp[data-k="2"]{transition-delay:.7s}
+.s13c .lp path{stroke-dashoffset:0}
+.s13c .sdots{position:absolute!important;left:50%;bottom:50px;transform:translateX(-50%);display:flex;gap:12px}
+.s13c .sdots i{width:10px;height:10px;border-radius:99px;background:rgba(30,20,20,.16);transition:width .4s ease,background .4s ease}
+.s13c .sdots i.on{width:34px;background:var(--or)}
+
+/* Prozess-Kreislauf (wiederverwendet) */
+.spz{padding-top:84px}
+.spz h2{font-size:76px;margin-top:22px}
+.spz .lp2{position:relative;height:104px;margin-top:70px}
+.spz .lp2 svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.spz .lp2 path.ln{fill:none;stroke:var(--or);stroke-width:3;stroke-linecap:round;stroke-dasharray:6 9;opacity:.75}
+.spz .lp2 .lbl3{position:absolute;left:658px;top:18px;transform:translate(-50%,-50%);display:flex;align-items:center;gap:12px;background:#fff;border:1px solid rgba(216,34,6,.35);color:var(--or);font:700 22px var(--sans);padding:10px 26px;border-radius:99px;box-shadow:0 12px 26px -16px rgba(216,34,6,.55);white-space:nowrap}
+.spz .lp2 .lbl3::before{content:"";width:20px;height:20px;border:3px solid var(--or);border-right-color:transparent;border-radius:50%;animation:spin 3s linear infinite}
+.spz .trk{display:grid;grid-template-columns:repeat(5,1fr);gap:28px;margin-top:6px}
+.spz .sx{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px}
+.spz .nd{width:150px;height:150px;border-radius:50%;display:grid;place-items:center;background:#fff;border:1px solid var(--line);box-shadow:0 30px 56px -30px rgba(40,20,15,.55);color:var(--or);position:relative;z-index:1}
+.spz .nd svg{width:64px;height:64px}
+.spz .sx:not(:last-child)::after{content:"";position:absolute;top:75px;left:calc(50% + 86px);width:calc(100% + 28px - 172px);height:3px;background:linear-gradient(90deg,var(--or),rgba(216,34,6,.35));border-radius:2px}
+.spz .sx h3{font-size:38px;font-weight:700;letter-spacing:-.02em;line-height:1.1;margin-top:14px}
+.spz .sx p{font-size:24px;line-height:1.42;color:var(--mut);max-width:300px}
+.spz .sx p b{color:var(--txt);font-weight:600}
+.spz .sx.fin .nd{background:radial-gradient(120px 100px at 80% 0%,#ee3a1c,transparent 70%),linear-gradient(150deg,#d82206,#b01a04);border:0;color:#fff;box-shadow:0 36px 70px -28px rgba(216,34,6,.8)}
+.spz .sx.fin h3{color:var(--or)}
+.spz .sx.sxc .nd{border:2px solid var(--or)}
+.spz .rs{display:flex;align-items:center;gap:22px;margin-top:64px;padding:24px 36px;border-radius:24px;background:#1d1f23;color:#fff;font-size:26px;font-weight:500;box-shadow:0 30px 60px -36px rgba(20,10,10,.7)}
+.spz .rs .ic{width:48px;height:48px;border-radius:14px;background:var(--or);display:grid;place-items:center;flex:none}
+.spz .rs .ic svg{width:26px;height:26px;color:#fff}
+.spz .rs b{color:#ff9a88;font-weight:700}
+.spz [data-k]{opacity:0;transform:translateY(30px) scale(.97);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+.spz.k1 [data-k="1"],.spz.k2 [data-k="2"],.spz.k3 [data-k="3"],.spz.k4 [data-k="4"]{opacity:1;transform:none;transition-delay:.15s}
+.spz.k3 .lp2[data-k="3"]{transition-delay:.5s}
+.spz .sx:not(:last-child):not([data-k="0"])::after{transition:opacity .6s ease}
+.spz .sdots{position:absolute!important;left:50%;bottom:50px;transform:translateX(-50%);display:flex;gap:12px}
+.spz .sdots i{width:10px;height:10px;border-radius:99px;background:rgba(30,20,20,.16);transition:width .4s ease,background .4s ease}
+.spz .sdots i.on{width:34px;background:var(--or)}
+/* 14 */
+.s14 .wrap{display:grid;grid-template-columns:720px 1fr;gap:100px;height:780px;margin-top:-60px;align-items:center}
+.price{font:700 150px/1 var(--sans);letter-spacing:-.06em;color:var(--or)}
+.price-s{font:400 26px var(--mono);color:var(--mut);margin-top:36px;line-height:1.6}
+.tbl{display:flex;flex-direction:column}
+.tr2{display:grid;grid-template-columns:96px 1fr 180px;align-items:center;padding:24px 0;border-bottom:1px solid var(--line);font-size:34px;font-weight:500}
+.tr2 .c{font:700 26px var(--mono);color:var(--or)}
+.tr2 .v{text-align:right;font:500 30px var(--mono);color:var(--mut)}
+.tr2.tot{border-bottom:0;border-top:2px solid var(--or);font-weight:700}
+.tr2.tot .v{color:var(--txt)}
+
+/* 15 */
+.s15 .wrap{display:grid;grid-template-columns:1fr 640px;gap:80px;margin-top:20px}
+.s15 h2{font-size:150px}
+.steps{display:flex;flex-direction:column;gap:22px;margin-top:56px}
+.st{display:flex;align-items:center;gap:30px;padding:28px 34px;font-size:36px;font-weight:600}
+.st .n{display:none;font:700 30px var(--mono);color:var(--or);width:76px;height:76px;border-radius:50%;border:2px solid var(--or);display:grid;place-items:center;flex:none}
+.qs{padding:40px 42px;margin-top:20px;align-self:start;border-color:rgba(30,35,45,.4);background:rgba(30,35,45,.06)}
+.qs .k{font:500 20px var(--mono);letter-spacing:.2em;color:var(--bl)}
+.qs ul{list-style:none;margin-top:26px;display:flex;flex-direction:column;gap:20px}
+.qs li{font-size:27px;display:flex;gap:16px;align-items:center;line-height:1.3}
+.qs li svg{color:var(--bl);flex:none;width:28px;height:28px}
+.contact{position:absolute!important;left:120px;bottom:100px;font:500 26px var(--mono);color:var(--mut)}
+
+/* ui */
+#prog{position:absolute;left:0;top:0;height:5px;background:linear-gradient(90deg,var(--or),var(--or2));width:0;transition:width .5s ease;z-index:20}
+#hint{position:fixed;right:18px;bottom:14px;font:12px var(--mono);color:#556;z-index:50;opacity:.7}
+#ov{position:fixed;inset:0;z-index:40;background:rgba(5,9,20,.96);display:none;overflow:auto;padding:40px}
+#ov.on{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:22px;align-content:start}
+#ov button{all:unset;cursor:pointer;aspect-ratio:16/9;border-radius:12px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);display:flex;flex-direction:column;justify-content:flex-end;padding:16px;font:500 15px var(--mono)}
+#ov button:hover,#ov button.cur{border-color:var(--or)}
+#ov button b{color:var(--or);font-size:22px}
+
+.s15{padding:0;background:radial-gradient(1200px 800px at 85% 10%,#ee3a1c,transparent 60%),linear-gradient(150deg,#d82206,#b01a04)!important;color:#fff}
+.s15::before{background-image:linear-gradient(rgba(255,255,255,.35) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.35) 1px,transparent 1px);opacity:.12}
+.s15 .eyebrow{position:absolute;left:120px;top:96px;color:#fff}.s15 .eyebrow::before{background:#fff}
+.s15 h2{position:absolute;left:120px;top:160px;font-size:190px;margin:0;color:#fff}
+.s15 h2 em{color:#1d1f23}
+.tl2{position:absolute;left:120px;right:120px;top:560px;display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.tl2::before{content:"";position:absolute;left:36px;right:36px;top:36px;height:4px;background:rgba(255,255,255,.35);border-radius:3px}
+.tl2 .tp{position:relative;padding-top:0}
+.tl2 .dt{width:72px;height:72px;border-radius:50%;background:#fff;color:#d82206;display:grid;place-items:center;box-shadow:0 18px 36px -12px rgba(60,0,0,.6);position:relative;z-index:1}
+.tl2 .dt svg{width:34px;height:34px;stroke-width:2.2}
+.tl2 .tp.l .dt{background:#1d1f23;color:#fff}
+.tl2 .kw{font-size:20px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.75);margin-top:26px}
+.tl2 h3{font-size:44px;font-weight:700;letter-spacing:-.02em;margin-top:6px;line-height:1.1}
+.tl2 p{font-size:23px;color:rgba(255,255,255,.85);margin-top:8px;line-height:1.35;max-width:440px}
+.s15 .contact{position:absolute;left:120px;bottom:100px;font:600 28px var(--sans);color:#fff}
+.s15 .fwm,.s15 .fwm span,.s15 .foot b{color:rgba(255,255,255,.8)}
+.s15 .foot b{color:#fff}
+@media print{
+  @page{size:1920px 1080px;margin:0}
+  html,body{overflow:visible;height:auto;background:#fff}
+  #stage{position:static;transform:none!important;width:1920px;height:auto;overflow:visible}
+  .slide{position:relative;opacity:1!important;visibility:visible!important;width:1920px;height:1080px;break-after:page;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  [data-a]{opacity:1!important;transform:none!important}
+  .bar .tr i{width:var(--w)!important}.gr-row .bar3{width:var(--w)!important}
+  #hint,#ov,#prog{display:none!important}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+ <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17" cy="9" r="2.5"/><path d="M17.5 14c2.4.3 4 2 4 5"/></symbol>
+ <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4.5"/><path d="M11.5 12 20 3.5M16 7.5l3 3M13.5 10l2 2"/></symbol>
+ <symbol id="i-palette" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1.5 0 2-1 1.5-2-.6-1.3.2-2.5 1.6-2.5H18a3 3 0 0 0 3-3C21 7 17 3 12 3z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="15" cy="7.5" r="1"/></symbol>
+ <symbol id="i-access" viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="2"/><path d="M5 8.5c4.5 1.3 9.5 1.3 14 0M12 8.5V14m0 0-3.5 6.5M12 14l3.5 6.5"/></symbol>
+ <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3M12 14.5v2.5"/></symbol>
+ <symbol id="i-server" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="6.5" rx="2"/><rect x="3" y="13.5" width="18" height="6.5" rx="2"/><path d="M7 7.25h.01M7 16.75h.01"/></symbol>
+ <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+ <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></symbol>
+ <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H12z"/></symbol>
+ <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V4M4 20h16"/><rect x="7.5" y="11" width="3" height="6" rx=".8"/><rect x="12.5" y="7" width="3" height="10" rx=".8"/><rect x="17.5" y="13" width="2" height="4" rx=".8"/></symbol>
+ <symbol id="i-table" viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="15" rx="2.5"/><path d="M3 10h18M3 15h18M9.5 4.5v15"/></symbol>
+ <symbol id="i-plane" viewBox="0 0 24 24"><path d="M21 3 10.5 13.5M21 3l-6.5 18-4-7.5L3 9.5z"/></symbol>
+ <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 7 8.5 6.5L20.5 7"/></symbol>
+ <symbol id="i-cap" viewBox="0 0 24 24"><path d="M2 9.5 12 5l10 4.5L12 14z"/><path d="M6 11.5v4.5c0 1.5 3 3 6 3s6-1.5 6-3v-4.5M22 9.5V15"/></symbol>
+ <symbol id="i-branch" viewBox="0 0 24 24"><circle cx="6" cy="5.5" r="2.3"/><circle cx="6" cy="18.5" r="2.3"/><circle cx="18" cy="8.5" r="2.3"/><path d="M6 8v8M18 11c0 4-6 3-11 6"/></symbol>
+ <symbol id="i-scan" viewBox="0 0 24 24"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2M4 12h16"/></symbol>
+ <symbol id="i-check" viewBox="0 0 24 24"><path d="m4.5 12.5 5 5L19.5 7"/></symbol>
+ <symbol id="i-x" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+ <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.7-6.5 10-6.5S22 12 22 12s-3.7 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+ <symbol id="i-rocket" viewBox="0 0 24 24"><path d="M12 15 9 12c0-5 3-9 11-9 0 8-4 11-9 11zM9 12l-4 1 2 4M12 15l-1 4 4-2M6 18l-3 3"/></symbol>
+ <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4.5 6v6c0 4.5 3.2 7.6 7.5 9 4.3-1.4 7.5-4.5 7.5-9V6z"/><path d="m9 12 2.2 2.2L15.5 10"/></symbol>
+ <symbol id="i-box" viewBox="0 0 24 24"><path d="M12 2.5 3.5 7v10L12 21.5 20.5 17V7zM3.5 7 12 11.5 20.5 7M12 11.5v10"/></symbol>
+ <symbol id="i-pulse" viewBox="0 0 24 24"><path d="M3 12h4l2.5-6 4 12 2.5-6H21"/></symbol>
+ <symbol id="i-flask" viewBox="0 0 24 24"><path d="M9 3h6M10 3v6L4.5 19a1.5 1.5 0 0 0 1.3 2h12.4a1.5 1.5 0 0 0 1.3-2L14 9V3M7.5 15h9"/></symbol>
+ <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+ <symbol id="i-building" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7.5h.01M15 7.5h.01M9 12h.01M15 12h.01M10 21v-4h4v4"/></symbol>
+ <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.8"/></symbol>
+ <symbol id="i-vault" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="12" cy="12" r="3.5"/><path d="M12 8.5V10M12 14v1.5M8.5 12H10M14 12h1.5"/></symbol>
+ <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v13m0 0-5-5m5 5 5-5"/></symbol>
+ <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></symbol>
+ <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.2a2.6 2.6 0 0 1 5 .8c0 1.7-2.5 2.2-2.5 3.8M12 17h.01"/></symbol>
+ <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M3 12h17m0 0-6-6m6 6-6 6"/></symbol>
+</defs>
+</svg>
+
+<div id="stage">
+<div id="prog"></div>
+
+<!-- 1 TITEL -->
+<section class="slide s1" data-title="Titel">
+  <div class="l">
+    <div class="wm" data-a style="--i:0"><b>Hochschule Karlsruhe</b><span>University of Applied Sciences</span></div>
+    <div class="eyebrow" data-a style="--i:0">Angebot · [Ihr Team]</div>
+    <h1 data-a style="--i:1">Micro‑App‑<br><em>Plattform</em></h1>
+    <p class="sub" data-a style="--i:2">KI‑gebaute Apps. Sicher, einheitlich, in einem Portal.</p>
+  </div>
+  <div class="meta" data-a style="--i:4">OKTOBER 2026</div>
+  <div class="pm" data-a="s" style="--i:3"><div class="top"><i></i><i></i><i></i><div class="u">portal.h-ka.de</div></div><div class="hd">Workflows · Hochschule Karlsruhe<span>● SSO</span></div><div class="g"><div class="a h"><svg viewBox="0 0 24 24"><use href="#i-cap"/></svg>Meine Noten</div><div class="a "><svg viewBox="0 0 24 24"><use href="#i-chart"/></svg>Auslastung</div><div class="a "><svg viewBox="0 0 24 24"><use href="#i-plane"/></svg>Dienstreise</div><div class="a "><svg viewBox="0 0 24 24"><use href="#i-folder"/></svg>E‑Akte</div><div class="a "><svg viewBox="0 0 24 24"><use href="#i-mail"/></svg>Mein Tag</div><div class="a "><svg viewBox="0 0 24 24"><use href="#i-table"/></svg>CSV‑Tool</div><div class="a "><svg viewBox="0 0 24 24"><use href="#i-building"/></svg>Schließantrag</div><div class="a "><svg viewBox="0 0 24 24"><use href="#i-users"/></svg>Entlastung</div><div class="a n"><svg viewBox="0 0 24 24"><use href="#i-plus"/></svg>Neue App</div></div></div>
+</section>
+
+<!-- 2 AUSGANGSLAGE -->
+<section class="slide s2" data-title="Ausgangslage">
+  <div class="eyebrow" data-a style="--i:0">Ausgangslage</div>
+  <h2 data-a style="--i:1">KI baut Apps.<br><em>Über Nacht.</em></h2>
+  <div class="stats">
+    <div data-a style="--i:2"><div class="big old">½ Jahr</div></div>
+    <svg class="arrow i" data-a style="--i:3" viewBox="0 0 24 24"><use href="#i-arrow"/></svg>
+    <div data-a style="--i:4"><div class="big new">30 Min.</div></div>
+  </div>
+  <div class="bars" data-a style="--i:6">
+    <div class="bar" style="--w:100%"><div class="k">FUNDAMENT · USER‑LIFECYCLE</div><div class="tr"><i></i></div></div>
+    <div class="bar" style="--w:14%"><div class="k">FRONTENDS · STUNDEN BIS TAGE</div><div class="tr"><i></i></div></div>
+  </div>
+  <div class="pr2">
+    <div class="q" data-a="r" style="--i:2">Zeig mir die Auslastung pro Studiengang.</div>
+    <div class="ar" data-a="r" style="--i:3"><svg class='i' viewBox="0 0 24 24"><use href="#i-arrow"/></svg>30 Minuten später</div>
+    <div class="dash" data-a="r" style="--i:4"><div class="hd2">Auslastung · Studiengänge<span>fertig</span></div><div class="bs"><div class="r" style="--k:0"><span>Informatik</span><div><i style="--w:92%"></i></div><b>92%</b></div><div class="r" style="--k:1"><span>Maschinenbau</span><div><i style="--w:78%"></i></div><b>78%</b></div><div class="r" style="--k:2"><span>Wirtschaft</span><div><i style="--w:64%"></i></div><b>64%</b></div><div class="r" style="--k:3"><span>Elektrotechnik</span><div><i style="--w:51%"></i></div><b>51%</b></div><div class="r" style="--k:4"><span>Architektur</span><div><i style="--w:38%"></i></div><b>38%</b></div></div></div>
+  </div>
+  <div class="foot"><span class="fwm">Hochschule Karlsruhe <span>· Micro‑App‑Plattform</span></span><b>2 / 18</b></div>
+</section>
+
+<!-- 3 WILDWUCHS -->
+<!-- PROZESS A -->
+<section class="slide spz" data-steps="4" data-title="Prozess">
+  <div class="eyebrow" data-a style="--i:0">Das Prinzip</div>
+  <h2 data-a style="--i:1">Iterativ zur <em>sicheren App.</em></h2>
+  <div class="lp2" data-k="3"><svg viewBox="0 0 1680 104"><defs><marker id="pzaA" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:#d82206;stroke:none;stroke-dasharray:none;opacity:1"/></marker></defs><path class="ln" d="M1162 104V44Q1162 18 1136 18H180Q154 18 154 44V98" marker-end="url(#pzaA)"/></svg><div class="lbl3">Nicht bestanden? Nächste Iteration</div></div>
+  <div class="trk">
+    <div class="sx" data-a style="--i:2"><div class="nd"><svg class="i" viewBox="0 0 24 24"><use href="#i-bolt"/></svg></div><h3>Entwickeln</h3><p>Die KI baut die App mit <b>Golden Master und Skills</b>.</p></div>
+    <div class="sx" data-k="1"><div class="nd"><svg class="i" viewBox="0 0 24 24"><use href="#i-branch"/></svg></div><h3>Prüfen</h3><p><b>Pipeline</b> mit Checks und Vier-Augen-Freigabe.</p></div>
+    <div class="sx" data-k="2"><div class="nd"><svg class="i" viewBox="0 0 24 24"><use href="#i-flask"/></svg></div><h3>Simulieren</h3><p><b>Secrets und Login</b> im Testlauf, bevor etwas live geht.</p></div>
+    <div class="sx sxc" data-k="3"><div class="nd"><svg class="i" viewBox="0 0 24 24"><use href="#i-eye"/></svg></div><h3>Qualität prüfen</h3><p><b>Protokoll</b> zeigt, welche Regeln noch fehlen.</p></div>
+    <div class="sx fin" data-k="4"><div class="nd"><svg class="i" viewBox="0 0 24 24"><use href="#i-check"/></svg></div><h3>Qualität sichern</h3><p>Ein <b>Skript</b> prüft jede künftige App automatisch.</p></div>
+  </div>
+  <div class="rs" data-k="4"><div class="ic"><svg class="i" viewBox="0 0 24 24"><use href="#i-bolt"/></svg></div><div>Jede Runde macht die Regeln <b>schärfer</b>. Am Ende ist Qualität <b>eingebaut</b>, nicht nachgeprüft.</div></div>
+  <div class="sdots"><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="foot"><span class="fwm">Hochschule Karlsruhe <span>· Micro‑App‑Plattform</span></span><b>3 / 18</b></div>
+</section>
+
+<section class="slide s3b" data-title="Wilder Westen">
+  <div class="eyebrow" data-a style="--i:0">Herausforderung</div>
+  <div class="wrap">
+    <div><h2 data-a style="--i:1">Wilder <em>Westen.</em></h2></div>
+    <div class="col"><div class="mw" data-a="s" style="--r:-4deg;left:0px;top:30px;--i:3"><div class="tb"><i></i><i></i><i></i>10.0.4.17:8080</div><div class="hd" style="background:#2b6cb0;font-family:Georgia,serif">Dienstreise</div><div class="bd" style="font-family:Georgia,serif"><div class="f">Benutzer</div><div class="f">Passwort</div><span class="b" style="background:#2b6cb0;border-radius:3px">Login</span></div></div><div class="mw" data-a="s" style="--r:3deg;left:345px;top:0px;--i:4"><div class="tb"><i></i><i></i><i></i>fak3-vm.local:5173</div><div class="hd" style="background:#38a169;font-family:Arial">Auslastung</div><div class="bd" style="font-family:Arial"><div class="t" style="width:90%;background:#e8f2ec;height:30px"></div><div class="t" style="width:70%;background:#e8f2ec;height:30px"></div><span style="color:#bfe0cc;font-size:13px">Kaum lesbar: zu wenig Kontrast</span></div></div><div class="mw" data-a="s" style="--r:-3deg;left:690px;top:40px;--i:5"><div class="tb"><i></i><i></i><i></i>npm run web</div><div class="hd" style="background:#dd6b20;font-family:ui-monospace,Menlo,monospace">E‑Akte (Java?)</div><div class="bd" style="font-family:Arial"><div class="t" style="height:30px"></div><div class="t" style="width:60%;height:30px"></div><span class="b" style="background:#dd6b20;border-radius:99px">Öffnen</span></div></div><div class="mw" data-a="s" style="--r:2deg;left:70px;top:270px;--i:6"><div class="tb"><i></i><i></i><i></i>unbekannt.fak7.de</div><div class="hd" style="background:#6b46c1;font-family:'Courier New',monospace">CSV‑Tool</div><div class="bd" style="font-family:'Courier New',monospace"><code>API_KEY = "sk_live_9f…"</code><code>TOKEN = "eyJhbGci…"</code></div></div><div class="mw" data-a="s" style="--r:-2deg;left:470px;top:290px;--i:7"><div class="tb"><i></i><i></i><i></i>localhost:3000</div><div class="hd" style="background:#1a202c;font-family:Verdana,sans-serif">Noten‑Export</div><div class="bd" style="font-family:Verdana,sans-serif"><div class="f" style="white-space:nowrap">anderes Login</div><span class="b" style="background:#1a202c">Weiter</span></div></div><div class="cmds"><div class="cq" data-a style="--i:7">Wie startet man die App?</div><div class="cr2"><div class="cm" data-a="s" style="--i:8;--r:-3deg"><div class="cb"><i></i><i></i><i></i></div><code><span>$</span> npm run dev</code><small>Dienstreise</small></div><div class="cm" data-a="s" style="--i:9;--r:2deg"><div class="cb"><i></i><i></i><i></i></div><code><span>$</span> npm start</code><small>Auslastung</small></div><div class="cm" data-a="s" style="--i:10;--r:-2deg"><div class="cb"><i></i><i></i><i></i></div><code><span>$</span> npm run web</code><small>E‑Akte</small></div><div class="cm" data-a="s" style="--i:11;--r:3deg"><div class="cb"><i></i><i></i><i></i></div><code><span>$</span> python main.py</code><small>CSV‑Tool</small></div></div></div></div>
+  </div>
+  <div class="foot"><span class="fwm">Hochschule Karlsruhe <span>· Micro‑App‑Plattform</span></span><b>4 / 18</b></div>
+</section>
+
+<!-- 4 ZIELBILD -->
+
+
+<!-- 6 GOLDEN MASTER -->
+<section class="slide s6" data-title="Golden Master">
+  <div class="eyebrow" data-a style="--i:0">Entwickeln</div>
+  <div class="wrap">
+    <div>
+      <h2 data-a style="--i:1">Golden<br><em>Master</em></h2>
+      <div class="tog" data-a style="--i:2"><button class="on" data-st="py">Python</button><button data-st="node">JavaScript</button></div>
+      <p class="same" data-a style="--i:3">Immer gleiche Befehle:<br><b>dev · start · test · lint · docker</b></p>
+    </div>
+    <div class="win" data-a="r" style="--i:2">
+      <div class="bar2"><i></i><i></i><i></i><span>mein-projekt — VS Code</span></div>
+      <div class="stack on" data-s="py"><div class="tr3"><div class="r3 fo" style="--d:0"><span><svg><use href="#i-folder"/></svg>mein-projekt/</span><em></em></div>
+<div class="r3 " style="--d:1"><span><svg><use href="#i-file"/></svg>AGENTS.md</span><em>KI‑Regeln</em></div>
+<div class="r3 " style="--d:1"><span><svg><use href="#i-folder"/></svg>.agents/</span><em>skills · tests</em></div>
+<div class="r3 hl" style="--d:1"><span><svg><use href="#i-box"/></svg>pyproject.toml</span><em>Skripte</em></div>
+<div class="r3 " style="--d:1"><span><svg><use href="#i-folder"/></svg>app/</span><em>FastAPI</em></div>
+<div class="r3 " style="--d:1"><span><svg><use href="#i-box"/></svg>docker-compose.yml</span><em>Health Check</em></div>
+<div class="r3 " style="--d:1"><span><svg><use href="#i-grid"/></svg>manifest.json</span><em>Portal</em></div>
+<div class="r3 " style="--d:1"><span><svg><use href="#i-folder"/></svg>.devcontainer/</span><em>VS Code</em></div></div><div class="code"><span class="h">pyproject.toml</span>[<span class="k">tool.poe.tasks</span>]
+<span class="k">dev</span>    = "<span class="v">uvicorn app.main:app --reload</span>"
+<span class="k">start</span>  = "<span class="v">uvicorn app.main:app</span>"
+<span class="k">test</span>   = "<span class="v">pytest</span>"
+<span class="k">lint</span>   = "<span class="v">ruff check .</span>"
+<span class="k">docker</span> = "<span class="v">docker compose up --build</span>"</div></div>
+      <div class="stack" data-s="node"><div class="tr3"><div class="r3 fo" style="--d:0"><span><svg><use href="#i-folder"/></svg>mein-projekt/</span><em></em></div>
+<div class="r3 " style="--d:1"><span><svg><use href="#i-file"/></svg>AGENTS.md</span><em>KI‑Regeln</em></div>
+<div class="r3 " style="--d:1"><span><svg><use href="#i-folder"/></svg>.agents/</span><em>skills · tests</em></div>
+<div class="r3 hl" style="--d:1"><span><svg><use href="#i-box"/></svg>package.json</span><em>Skripte</em></div>
+<div class="r3 " style="--d:1"><span><svg><use href="#i-folder"/></svg>src/</span><em>Express</em></div>
+<div class="r3 " style="--d:1"><span><svg><use href="#i-box"/></svg>docker-compose.yml</span><em>Health Check</em></div>
+<div class="r3 " style="--d:1"><span><svg><use href="#i-grid"/></svg>manifest.json</span><em>Portal</em></div>
+<div class="r3 " style="--d:1"><span><svg><use href="#i-folder"/></svg>.devcontainer/</span><em>VS Code</em></div></div><div class="code"><span class="h">package.json</span>"<span class="k">scripts</span>": {
+  "<span class="k">dev</span>":    "<span class="v">node --watch src/server.js</span>",
+  "<span class="k">start</span>":  "<span class="v">node src/server.js</span>",
+  "<span class="k">test</span>":   "<span class="v">node --test</span>",
+  "<span class="k">lint</span>":   "<span class="v">eslint .</span>",
+  "<span class="k">docker</span>": "<span class="v">docker compose up --build</span>"
+}</div></div>
+    </div>
+  </div>
+  <div class="foot"><span class="fwm">Hochschule Karlsruhe <span>· Micro‑App‑Plattform</span></span><b>5 / 18</b></div>
+</section>
+<section class="slide s6b" data-title="Agent-Ordner">
+  <div class="eyebrow" data-a style="--i:0">Entwickeln</div>
+  <div class="wrap">
+    <div>
+      <h2 data-a style="--i:1">Agent‑<br><em>Ordner</em></h2>
+      <div class="tog" data-a style="--i:2"><button class="on" data-st="py">Python</button><button data-st="node">JavaScript</button></div>
+      <div class="card leg" data-a style="--i:3"><div class="ico"><svg class="i"><use href="#i-file"/></svg></div><div><h3>AGENTS.md</h3><p>Immer geladen · je Stack eigene Regeln.</p></div></div>
+      <div class="card leg" data-a style="--i:4"><div class="ico bl"><svg class="i"><use href="#i-bolt"/></svg></div><div><h3>Skills</h3><p>Nur bei Bedarf geladen · ein Thema, ein Skill.</p></div></div>
+      <div class="card leg" data-a style="--i:5"><div class="ico gr"><svg class="i"><use href="#i-flask"/></svg></div><div><h3>Tests</h3><p>Prüfen, ob die KI die Skills befolgt.</p></div></div>
+    </div>
+    <div class="win" data-a="r" style="--i:2">
+      <div class="bar2"><i></i><i></i><i></i><span>mein-projekt — VS Code</span></div>
+      <div class="stack on" data-s="py"><div class="tr3"><div class="r3 fo" style="--d:0"><span><svg><use href="#i-folder"/></svg>mein-projekt/</span><em></em></div>
+<div class="r3 hl" style="--d:1"><span><svg><use href="#i-file"/></svg>AGENTS.md</span><em>Python · FastAPI‑Regeln</em></div>
+<div class="r3 fo" style="--d:1"><span><svg><use href="#i-folder"/></svg>.agents/</span><em></em></div>
+<div class="r3 fo" style="--d:2"><span><svg><use href="#i-folder"/></svg>skills/</span><em></em></div>
+<div class="r3 " style="--d:3"><span><svg><use href="#i-palette"/></svg>design/</span><em>Aussehen, Farben, Schrift</em></div>
+<div class="r3 " style="--d:3"><span><svg><use href="#i-access"/></svg>barrierefreiheit/</span><em>Kontrast, einfache Sprache</em></div>
+<div class="r3 hl" style="--d:3"><span><svg><use href="#i-grid"/></svg>ui-regeln/</span><em>Baum links, Dialog 2 Buttons</em></div>
+<div class="r3 " style="--d:3"><span><svg><use href="#i-server"/></svg>schnittstellen/</span><em>Mail · E‑Akte · Noten</em></div>
+<div class="r3 " style="--d:3"><span><svg><use href="#i-box"/></svg>portal/</span><em>Manifest, Login, Health Check</em></div>
+<div class="r3 " style="--d:3"><span><svg><use href="#i-pulse"/></svg>pipeline-fehler/</span><em>Rote Pipeline finden &amp; beheben</em></div>
+<div class="r3 " style="--d:3"><span><svg><use href="#i-lock"/></svg>secrets/</span><em>Schlüssel entfernen, Tresor nutzen</em></div>
+<div class="r3 " style="--d:2"><span><svg><use href="#i-flask"/></svg>tests/</span><em>Testaufgaben + Checks</em></div></div><div class="code"><span class="h">skills/ui-regeln/SKILL.md</span><span class="c">---</span>
+<span class="k">name</span>: <span class="v">ui-regeln</span>
+<span class="c">---</span>
+<span class="k">Navigation</span>  Baum links, Inhalt rechts
+<span class="k">Dialoge</span>     genau zwei Buttons
+<span class="k">Sprache</span>     einfach, kurze Sätze
+<span class="k">Fehler</span>      Klartext + was tun?</div></div>
+      <div class="stack" data-s="node"><div class="tr3"><div class="r3 fo" style="--d:0"><span><svg><use href="#i-folder"/></svg>mein-projekt/</span><em></em></div>
+<div class="r3 hl" style="--d:1"><span><svg><use href="#i-file"/></svg>AGENTS.md</span><em>JavaScript · Express‑Regeln</em></div>
+<div class="r3 fo" style="--d:1"><span><svg><use href="#i-folder"/></svg>.agents/</span><em></em></div>
+<div class="r3 fo" style="--d:2"><span><svg><use href="#i-folder"/></svg>skills/</span><em></em></div>
+<div class="r3 " style="--d:3"><span><svg><use href="#i-palette"/></svg>design/</span><em>Aussehen, Farben, Schrift</em></div>
+<div class="r3 " style="--d:3"><span><svg><use href="#i-access"/></svg>barrierefreiheit/</span><em>Kontrast, einfache Sprache</em></div>
+<div class="r3 hl" style="--d:3"><span><svg><use href="#i-grid"/></svg>ui-regeln/</span><em>Baum links, Dialog 2 Buttons</em></div>
+<div class="r3 " style="--d:3"><span><svg><use href="#i-server"/></svg>schnittstellen/</span><em>Mail · E‑Akte · Noten</em></div>
+<div class="r3 " style="--d:3"><span><svg><use href="#i-box"/></svg>portal/</span><em>Manifest, Login, Health Check</em></div>
+<div class="r3 " style="--d:3"><span><svg><use href="#i-pulse"/></svg>pipeline-fehler/</span><em>Rote Pipeline finden &amp; beheben</em></div>
+<div class="r3 " style="--d:3"><span><svg><use href="#i-lock"/></svg>secrets/</span><em>Schlüssel entfernen, Tresor nutzen</em></div>
+<div class="r3 " style="--d:2"><span><svg><use href="#i-flask"/></svg>tests/</span><em>Testaufgaben + Checks</em></div></div><div class="code"><span class="h">skills/ui-regeln/SKILL.md</span><span class="c">---</span>
+<span class="k">name</span>: <span class="v">ui-regeln</span>
+<span class="c">---</span>
+<span class="k">Navigation</span>  Baum links, Inhalt rechts
+<span class="k">Dialoge</span>     genau zwei Buttons
+<span class="k">Sprache</span>     einfach, kurze Sätze
+<span class="k">Fehler</span>      Klartext + was tun?</div></div>
+    </div>
+  </div>
+  <div class="foot"><span class="fwm">Hochschule Karlsruhe <span>· Micro‑App‑Plattform</span></span><b>6 / 18</b></div>
+</section>
+
+<!-- 7 PIPELINE -->
+<section class="slide s7" data-title="Pipeline">
+  <div class="eyebrow" data-a style="--i:0">Prüfen</div>
+  <div class="hd"><h2 data-a style="--i:1">Pull Request <em>→ live.</em></h2><div class="auto" data-a style="--i:2"><i></i>Alles automatisch – bis auf die Freigabe</div></div>
+  <div class="stp" data-a style="--i:2"><div class="n "><b><svg class="i" viewBox="0 0 24 24"><use href="#i-branch"/></svg></b>Pull Request</div><div class="ln" style="--i:0"></div><div class="n "><b><svg class="i" viewBox="0 0 24 24"><use href="#i-scan"/></svg></b>Checks</div><div class="ln" style="--i:1"></div><div class="n h"><b><svg class="i" viewBox="0 0 24 24"><use href="#i-eye"/></svg></b>Review</div><div class="ln" style="--i:2"></div><div class="n "><b><svg class="i" viewBox="0 0 24 24"><use href="#i-box"/></svg></b>Merge</div><div class="ln" style="--i:3"></div><div class="n l"><b><svg class="i" viewBox="0 0 24 24"><use href="#i-rocket"/></svg></b>Live</div></div>
+  <div class="wrap">
+    <div class="gh" data-a="s" style="--i:3">
+      <div class="top"><i></i><i></i><i></i><div class="u">github.com/hochschule/dienstreise-app/pull/42</div></div>
+      <div class="ttl"><h3>Dienstreiseantrag als Micro‑App <span>#42</span></h3>
+        <div class="meta"><span class="badge"><svg viewBox="0 0 24 24"><use href="#i-branch"/></svg>Merged</span><span><b style="color:#1f2328;font-weight:600">Vibe‑Coder</b> hat 3 Commits in <b style="color:#1f2328;font-weight:600">main</b> gemergt · feature/dienstreise</span></div></div>
+      <div class="box"><div class="bh"><svg class="ck" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8" fill="#1a7f37"/><path d="M4.4 8.3l2.2 2.2 5-5.1" stroke="#fff" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><div><h4>Alle Prüfungen bestanden</h4><p>6 erfolgreiche Prüfungen</p></div></div>
+<div class="cr" data-a style="--i:3"><svg class="ck" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8" fill="#1a7f37"/><path d="M4.4 8.3l2.2 2.2 5-5.1" stroke="#fff" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>Secret‑Scan</b> <span>— Keine Schlüssel im Code</span></div><em>12 s</em><a>Details</a></div>
+<div class="cr" data-a style="--i:4"><svg class="ck" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8" fill="#1a7f37"/><path d="M4.4 8.3l2.2 2.2 5-5.1" stroke="#fff" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>Manifest‑Check</b> <span>— manifest.json gültig: Name, Kategorie, Routen</span></div><em>2 s</em><a>Details</a></div>
+<div class="cr" data-a style="--i:5"><svg class="ck" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8" fill="#1a7f37"/><path d="M4.4 8.3l2.2 2.2 5-5.1" stroke="#fff" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>Lint</b> <span>— ruff · eslint</span></div><em>18 s</em><a>Details</a></div>
+<div class="cr" data-a style="--i:6"><svg class="ck" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8" fill="#1a7f37"/><path d="M4.4 8.3l2.2 2.2 5-5.1" stroke="#fff" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>Tests</b> <span>— pytest · node:test</span></div><em>31 s</em><a>Details</a></div>
+<div class="cr" data-a style="--i:7"><svg class="ck" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8" fill="#1a7f37"/><path d="M4.4 8.3l2.2 2.2 5-5.1" stroke="#fff" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>Docker‑Build</b> <span>— Image gebaut</span></div><em>54 s</em><a>Details</a></div>
+<div class="cr" data-a style="--i:8"><svg class="ck" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8" fill="#1a7f37"/><path d="M4.4 8.3l2.2 2.2 5-5.1" stroke="#fff" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>Review</b> <span>— Freigabe durch zweite Person · 4 Augen</span></div><em>approved</em><a>Details</a></div>
+      </div>
+      <div class="mg" data-a style="--i:10"><div class="pc"><svg viewBox="0 0 24 24"><use href="#i-branch"/></svg></div><div><b>Pull Request zusammengeführt</b><p>Commit 3f9a1c2 in main</p></div></div>
+    </div>
+    <div class="gh dep" data-a="r" style="--i:6"><div class="bh"><svg class="ck" viewBox="0 0 24 24" style="stroke:#1f2328;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><use href="#i-rocket"/></svg><div><h4>Deployment</h4><p>automatisch nach dem Merge</p></div></div>
+      <div class="dp">
+        <div class="env"><i></i>production<span class="act">LIVE</span></div>
+        <div class="tl">
+          <div class="ds">Container gestartet<em>8 s</em></div>
+          <div class="ds">Health Check grün<em>5 s</em></div>
+          <div class="ds">Manifest registriert<em>1 s</em></div>
+          <div class="ds">Im Portal sichtbar<em>sofort</em></div>
+        </div>
+        <div class="url">portal.h-ka.de/dienstreise<span>Öffnen</span></div>
+      </div></div>
+  </div>
+  <div class="foot"><span class="fwm">Hochschule Karlsruhe <span>· Micro‑App‑Plattform</span></span><b>7 / 18</b></div>
+</section>
+<section class="slide s7b" data-title="Fehlerfall">
+  <div class="eyebrow" data-a style="--i:0">Fehlerfall</div>
+  <h2 data-a style="--i:1">Pipeline rot. <em>Was dann?</em></h2>
+  <div class="wrap">
+    <div class="gh" data-a="s" style="--i:2">
+      <div class="top"><i></i><i></i><i></i><div class="u">github.com/hochschule/dienstreise-app/pull/43</div></div>
+      <div class="ttl"><h3>Dienstreiseantrag: Kostenstelle ergänzen <span>#43</span></h3>
+        <div class="meta"><span class="badge" style="background:#1a7f37"><svg viewBox="0 0 24 24"><use href="#i-branch"/></svg>Open</span><span><b style="color:#1f2328;font-weight:600">Vibe‑Coder</b> möchte 2 Commits in <b style="color:#1f2328;font-weight:600">main</b> mergen</span></div></div>
+      <div class="box"><div class="bh bad"><svg class="ck" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8" fill="#cf222e"/><path d="M5.2 5.2l5.6 5.6M10.8 5.2l-5.6 5.6" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg><div><h4>Eine Prüfung ist fehlgeschlagen</h4><p>3 erfolgreich · 1 fehlgeschlagen · 1 übersprungen</p></div></div>
+<div class="cr " data-a style="--i:3"><svg class="ck" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8" fill="#1a7f37"/><path d="M4.4 8.3l2.2 2.2 5-5.1" stroke="#fff" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>Secret‑Scan</b> <span>— Keine Schlüssel im Code</span></div><em>12 s</em><a>Details</a></div>
+<div class="cr " data-a style="--i:4"><svg class="ck" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8" fill="#1a7f37"/><path d="M4.4 8.3l2.2 2.2 5-5.1" stroke="#fff" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>Manifest‑Check</b> <span>— manifest.json gültig</span></div><em>2 s</em><a>Details</a></div>
+<div class="cr " data-a style="--i:5"><svg class="ck" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8" fill="#cf222e"/><path d="M5.2 5.2l5.6 5.6M10.8 5.2l-5.6 5.6" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg><div><b>Lint</b> <span>— ruff: <code style='font:500 17px ui-monospace,Menlo,monospace'>F401</code> unbenutzter Import</span></div><em>18 s</em><a>Log</a></div>
+<div class="cr " data-a style="--i:6"><svg class="ck" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8" fill="#1a7f37"/><path d="M4.4 8.3l2.2 2.2 5-5.1" stroke="#fff" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>Tests</b> <span>— pytest</span></div><em>31 s</em><a>Details</a></div>
+<div class="cr skip" data-a style="--i:7"><svg class="ck" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="#8c959f" stroke-width="1.6"/><path d="M4.5 11.5l7-7" stroke="#8c959f" stroke-width="1.6" stroke-linecap="round"/></svg><div><b>Docker‑Build</b> <span>— übersprungen, Lint zuerst</span></div><em>–</em><a></a></div>
+      </div>
+      <div class="btn" data-a style="--i:8"><svg viewBox="0 0 24 24"><use href="#i-lock"/></svg>Merge blockiert, bis alle Prüfungen grün sind</div>
+      <div class="sum" data-a style="--i:9"><h5><svg class="ck" viewBox="0 0 16 16" style="width:22px;height:22px"><circle cx="8" cy="8" r="8" fill="#cf222e"/><path d="M5.2 5.2l5.6 5.6M10.8 5.2l-5.6 5.6" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>Lint fehlgeschlagen</h5><p><code>app/routes.py</code> Zeile 3 · <code>F401</code> unbenutzter Import<br>Lokal nachstellen: <code>poe lint</code> oder <code>npm run lint</code></p></div>
+    </div>
+    <div>
+      <div class="rt">
+<div class="sp " data-a="r" style="--i:3"><div class="d"><svg class="i" viewBox="0 0 24 24"><use href="#i-eye"/></svg></div><div><h3>Fehler sehen</h3><p>Rotes ✗ in GitHub und Mail. Der Log‑Link zeigt die Zeile.</p></div></div>
+<div class="sp k" data-a="r" style="--i:4"><div class="d"><svg class="i" viewBox="0 0 24 24"><use href="#i-bolt"/></svg></div><div><h3>Skill fragen</h3><p>„Pipeline ist rot“ – der Skill holt das Log und erklärt es.</p></div></div>
+<div class="sp g" data-a="r" style="--i:5"><div class="d"><svg class="i" viewBox="0 0 24 24"><use href="#i-check"/></svg></div><div><h3>Lokal beheben</h3><p>Gleicher Befehl wie in der Pipeline, fixen, pushen, grün.</p></div></div>
+      </div>
+      <div class="win" data-a="r" style="--i:6"><div class="bar2"><i></i><i></i><i></i><span>mein-projekt — VS Code</span></div><div class="code"><span class="h">skills/pipeline-fehler/SKILL.md</span><span class="k">name</span>: <span class="v">pipeline-fehler</span>
+
+→ <span class="k">gh pr checks</span>            → welcher Check ist rot?
+→ <span class="k">gh run view --log-failed</span> → Log lesen
+→ <span class="k">poe lint</span> | <span class="k">npm run lint</span> → lokal nachstellen
+→ beheben, lokal grün, pushen
+
+<span class="c">Regel: Code ändern, nie Checks abschalten</span></div></div>
+    
+    </div>
+  </div>
+  <div class="foot"><span class="fwm">Hochschule Karlsruhe <span>· Micro‑App‑Plattform</span></span><b>8 / 18</b></div>
+</section>
+<section class="slide s9s" data-title="Secret-Simulation">
+  <div class="eyebrow" data-a style="--i:0">Simulation · Secret in der Pipeline</div>
+  <h2 data-a style="--i:1">Schlüssel im Code? <em>Gestoppt.</em></h2>
+  <div class="wrap">
+    <div class="sc" data-a style="--i:2"><div class="lbl"><svg class="i" viewBox="0 0 24 24"><use href="#i-branch"/></svg>1 · In GitHub</div><div class="bd">
+      <div class="gh" style="box-shadow:none;border-radius:12px"><div class="cr" style="grid-template-columns:28px 1fr;padding:12px 18px;font-size:20px"><svg class="ck" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8" fill="#1a7f37"/><path d="M4.4 8.3l2.2 2.2 5-5.1" stroke="#fff" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>Manifest‑Check</b> <span>— gültig</span></div></div>
+        <div class="cr" style="grid-template-columns:28px 1fr;padding:12px 18px;font-size:20px"><svg class="ck" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8" fill="#cf222e"/><path d="M5.2 5.2l5.6 5.6M10.8 5.2l-5.6 5.6" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg><div><b>Secret‑Scan</b> <span>— fehlgeschlagen</span></div></div>
+        <div class="cr" style="grid-template-columns:28px 1fr;padding:12px 18px;font-size:20px;border-bottom:0"><svg class="ck" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8" fill="#1a7f37"/><path d="M4.4 8.3l2.2 2.2 5-5.1" stroke="#fff" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>Tests</b> <span>— bestanden</span></div></div></div>
+      <div class="toast"><b><svg viewBox="0 0 24 24" fill="none" stroke="#cf222e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2.5 20h19z"/><path d="M12 10v4.5M12 17.5h.01"/></svg>Geheimer Schlüssel gefunden</b><p><b style="display:inline;font-size:19px;color:#32383f">config.py, Zeile 12.</b> Ein Passwort oder Schlüssel steht im Code. So geht nichts live.</p></div>
+      <div class="info"><b>Was tun?</b>Frag deine KI: „Pipeline ist rot“.</div>
+    </div></div>
+    <div class="chev" data-a style="--i:3"><svg class="i" viewBox="0 0 24 24"><use href="#i-arrow"/></svg></div>
+    <div class="sc" data-a style="--i:4"><div class="lbl"><svg class="i" viewBox="0 0 24 24"><use href="#i-bolt"/></svg>2 · Die KI räumt auf</div><div class="bd">
+      <div class="bub u">Pipeline ist rot.</div>
+      <div class="bub a"><div class="who">KI‑ASSISTENT</div>Ein Schlüssel stand in <b>config.py</b>. Ich habe das für dich erledigt:
+        <div class="okl"><div><svg class="ck" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8" fill="#1a7f37"/><path d="M4.4 8.3l2.2 2.2 5-5.1" stroke="#fff" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>Aus dem Code entfernt</div><div><svg class="ck" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8" fill="#1a7f37"/><path d="M4.4 8.3l2.2 2.2 5-5.1" stroke="#fff" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>Neuer Branch ohne den Schlüssel</div><div><svg class="ck" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8" fill="#1a7f37"/><path d="M4.4 8.3l2.2 2.2 5-5.1" stroke="#fff" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>Platz im Portal‑Tresor angelegt</div></div>
+        <div style="margin-top:12px"><b>Jetzt bist du dran</b> – 3 kurze Schritte.</div></div>
+      <span class="chp">Skills: pipeline‑fehler · secrets</span>
+    </div></div>
+    <div class="chev" data-a style="--i:5"><svg class="i" viewBox="0 0 24 24"><use href="#i-arrow"/></svg></div>
+    <div class="sc" data-a style="--i:6"><div class="lbl"><svg class="i" viewBox="0 0 24 24"><use href="#i-users"/></svg>3 · Du erledigst</div><div class="bd">
+      <div class="okl" style="gap:14px;margin:0">
+        <div><svg class="ck" viewBox="0 0 16 16"><rect x="1.5" y="1.5" width="13" height="13" rx="3.5" fill="#fff" stroke="#8c959f" stroke-width="1.6"/></svg><span><b>Neuen Schlüssel erzeugen</b><br><span style="font-size:18px;color:var(--mut)">Die KI zeigt dir, wo beim Dienst.</span></span></div>
+        <div><svg class="ck" viewBox="0 0 16 16"><rect x="1.5" y="1.5" width="13" height="13" rx="3.5" fill="#fff" stroke="#8c959f" stroke-width="1.6"/></svg><span><b>Im Portal eintragen</b><br><span style="font-size:18px;color:var(--mut)">Portal → Meine Secrets → Einfügen.</span></span></div>
+        <div><svg class="ck" viewBox="0 0 16 16"><rect x="1.5" y="1.5" width="13" height="13" rx="3.5" fill="#fff" stroke="#8c959f" stroke-width="1.6"/></svg><span><b>Alten Schlüssel widerrufen</b><br><span style="font-size:18px;color:var(--mut)">Beim Dienst auf „Löschen“ klicken.</span></span></div>
+      </div>
+      <div class="toast" style="border-left-color:#e3b341;background:#fffbea;border-color:#f0dc9a;margin-top:auto"><b style="color:#7a5b00"><svg viewBox="0 0 24 24" fill="none" stroke="#9a6700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2.5 20h19z"/><path d="M12 10v4.5M12 17.5h.01"/></svg>Wichtig</b><p>Der alte Schlüssel gilt als bekannt. Erst nach dem Widerrufen ist es sicher.</p></div>
+      <div class="info" style="border-color:#bfe3cc;border-left-color:#1a7f37;background:#f1faf4"><b style="color:#136c34">Danach: Pipeline grün.</b>Review, Merge, live.</div>
+    </div></div>
+  </div>
+  <div class="card never" data-a style="--i:7">
+    <div class="t1">Drei Sicherungen<small>Commit‑Hook · GitHub Push Protection · Pipeline‑Scan</small></div>
+    <div class="sep"></div>
+    <div class="t1">Kein automatischer Fix<small>Neuer Schlüssel, alter wird widerrufen – das macht der Vibe‑Coder selbst</small></div>
+  </div>
+  <div class="foot"><span class="fwm">Hochschule Karlsruhe <span>· Micro‑App‑Plattform</span></span><b>9 / 18</b></div>
+</section>
+
+<!-- 8 PORTAL -->
+<section class="slide s8" data-title="Portal">
+  <div class="eyebrow" data-a style="--i:0">Betreiben</div>
+  <div class="wrap">
+    <div>
+      <h2 data-a style="--i:1">Ein Portal.<br><em>Alle Apps.</em></h2>
+      <p class="lead" data-a style="--i:2;font-size:28px">Apps registrieren sich selbst.</p>
+    </div>
+    <div class="browser" data-a="r" style="--i:2">
+      <div class="top"><i></i><i></i><i></i><div class="url">portal.h-ka.de</div></div>
+      <div class="hd"><div>Workflows <small>· Hochschule Karlsruhe</small></div><div class="sso">● SSO</div></div>
+      <div class="bd">
+        <div class="nav"><b>▾ Studium</b><span class="a">Noten</span><span>Auslastung</span><b>▾ Verwaltung</b><span>Dienstreise</span><span>E‑Akte</span><b>▸ Kommunikation</b></div>
+        <div class="apps">
+          <div class="ap"><svg><use href="#i-cap"/></svg>Meine Noten</div>
+          <div class="ap"><svg><use href="#i-chart"/></svg>Auslastung</div>
+          <div class="ap"><svg><use href="#i-plane"/></svg>Dienstreise</div>
+          <div class="ap"><svg><use href="#i-folder"/></svg>E‑Akte</div>
+          <div class="ap"><svg><use href="#i-mail"/></svg>Meine Mails</div>
+          <div class="ap"><svg><use href="#i-building"/></svg>Schließantrag</div>
+          <div class="ap"><svg><use href="#i-users"/></svg>Entlastung</div>
+          <div class="ap"><svg><use href="#i-table"/></svg>CSV‑Tool</div>
+          <div class="ap new"><svg><use href="#i-plus"/></svg>Neue App<small>manifest.json → registriert</small></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span class="fwm">Hochschule Karlsruhe <span>· Micro‑App‑Plattform</span></span><b>10 / 18</b></div>
+</section>
+
+<!-- 9 ZERO TRUST -->
+<section class="slide s9" data-title="Zero Trust">
+  <div class="eyebrow" data-a style="--i:0">Sicherheit</div>
+  <div class="zt">
+    <div>
+      <div class="lay" data-a="s" style="--i:2">
+        <div class="ly l1"><div class="nm"><svg class="i" viewBox="0 0 24 24"><use href="#i-lock"/></svg>Portal · SSO</div><div class="sb">Wer bist du? Anmeldung für alles.</div></div>
+        <div class="ly l2"><div class="nm"><svg class="i" viewBox="0 0 24 24"><use href="#i-grid"/></svg>Micro‑Apps</div><div class="sb">Nur über das Portal erreichbar.</div><div class="apx"><i>Noten</i><i>Dienstreise</i><i>Auslastung</i></div></div>
+        <div class="ly l3"><div class="nm"><svg class="i" viewBox="0 0 24 24"><use href="#i-server"/></svg>Kernsysteme</div><div class="ks"><span><svg class="i" viewBox="0 0 24 24"><use href="#i-mail"/></svg>Exchange</span><span><svg class="i" viewBox="0 0 24 24"><use href="#i-folder"/></svg>E‑Akte</span><span><svg class="i" viewBox="0 0 24 24"><use href="#i-cap"/></svg>Notensystem</span></div></div>
+        <div class="rb a" style="top:40px"><span class="lb">ANGRIFF AUF<br>IP‑ADRESSE</span></div><div class="xl"></div><div class="xp"><svg class="i" viewBox="0 0 24 24"><use href="#i-x"/></svg></div><div class="lt" style="top:176px;color:var(--or)">läuft ins Leere</div>
+        <div class="rb u" style="top:236px"><span class="lb">ANMELDUNG ÜBER<br>PORTAL</span></div><div class="ul"></div><div class="up"><svg class="i" viewBox="0 0 24 24"><use href="#i-check"/></svg></div><div class="lt" style="top:430px;color:var(--gr)">kommt bis zu<br>seinen Daten</div>
+      </div>
+    </div>
+    <div class="pr4">
+<div class="pc" data-a="r" style="--i:3"><div class="ico "><svg class="i" viewBox="0 0 24 24"><use href="#i-key"/></svg></div><div><b>Schlüssel nur im Portal</b><span>Nie in einer App. Apps arbeiten ohne eigene Secrets.</span></div></div>
+<div class="pc" data-a="r" style="--i:4"><div class="ico bl"><svg class="i" viewBox="0 0 24 24"><use href="#i-shield"/></svg></div><div><b>Zugang nur über das Portal</b><span>Wer die Adresse einer App kennt, kommt trotzdem nicht hinein.</span></div></div>
+<div class="pc" data-a="r" style="--i:6"><div class="ico rd"><svg class="i" viewBox="0 0 24 24"><use href="#i-users"/></svg></div><div><b>Jede Person nur das Eigene</b><span>Strikte Trennung der Sitzungen.</span></div></div>
+    </div>
+  </div>
+  <div class="foot"><span class="fwm">Hochschule Karlsruhe <span>· Micro‑App‑Plattform</span></span><b>11 / 18</b></div>
+</section>
+<section class="slide s9b" data-title="Login-Ablauf">
+  <div class="eyebrow" data-a style="--i:0">Sicherheit</div>
+  <h2 data-a style="--i:1">So läuft der <em>Login.</em></h2>
+  <div class="jr">
+    <div class="jc" data-a style="--i:2"><div class="who"><svg class="i" viewBox="0 0 24 24"><use href="#i-users"/></svg>Student · Professor</div>
+      <div class="vis"><div class="mb"><div class="u">portal.h-ka.de</div><div class="b"><div class="ln" style="width:60%"></div><div class="ln"></div><span class="btn">Portal öffnen</span></div></div></div>
+      <h3>Portal öffnen</h3><p>Die Portal‑Shell zeigt die Oberfläche aus der Registry.</p></div>
+    <div class="jc hot" data-a style="--i:3"><div class="who"><svg class="i" viewBox="0 0 24 24"><use href="#i-shield"/></svg>Security‑Gateway</div>
+      <div class="vis"><div class="stk"><span class="chip2"><svg class="i" viewBox="0 0 24 24"><use href="#i-eye"/></svg>Session da?</span><span class="chip2 dk"><svg class="i" viewBox="0 0 24 24"><use href="#i-x"/></svg>Nein → Login</span></div></div>
+      <h3>Gateway prüft</h3><p>Jede Anfrage läuft zuerst hier durch. Apps sehen niemanden direkt.</p></div>
+    <div class="jc" data-a style="--i:4"><div class="who"><svg class="i" viewBox="0 0 24 24"><use href="#i-lock"/></svg>Shibboleth · SSO</div>
+      <div class="vis"><div class="mb"><div class="u">Anmeldung</div><div class="b" style="gap:5px;padding:8px 10px"><div class="f" style="height:18px;padding:1px 8px">Kennung</div><div class="f" style="height:18px;padding:1px 8px">••••••</div><div class="g" style="padding:3px 14px">Anmelden</div></div></div></div>
+      <h3>Hochschul‑Login</h3><p>Nur hier wird das Passwort eingegeben. Per OAuth2 / OIDC.</p></div>
+    <div class="jc" data-a style="--i:5"><div class="who"><svg class="i" viewBox="0 0 24 24"><use href="#i-box"/></svg>Session‑Speicher</div>
+      <div class="vis"><div class="stk"><span class="chip2"><svg class="i" viewBox="0 0 24 24"><use href="#i-key"/></svg>Cookie im Browser</span><span class="chip2 dk"><svg class="i" viewBox="0 0 24 24"><use href="#i-server"/></svg>Session in Redis</span></div></div>
+      <h3>Session merken</h3><p>Der Browser bekommt nur ein Cookie. Tokens bleiben im Speicher.</p></div>
+    <div class="jc" data-a style="--i:6"><div class="who"><svg class="i" viewBox="0 0 24 24"><use href="#i-grid"/></svg>Micro‑App</div>
+      <div class="vis"><div class="stk"><span class="chip2"><svg class="i" viewBox="0 0 24 24"><use href="#i-file"/></svg>Auth Header</span><span class="chip2 dk"><svg class="i" viewBox="0 0 24 24"><use href="#i-check"/></svg>Meine Noten</span></div></div>
+      <h3>App antwortet</h3><p>Das Gateway reicht die Identität per Header weiter. Die App braucht keine Secrets.</p></div>
+  </div>
+  <div class="jbar" data-a style="--i:7">
+    <div class="card"><div class="ico"><svg class="i" viewBox="0 0 24 24"><use href="#i-vault"/></svg></div><div><b>Kein Passwort in Apps</b><small>Nur Shibboleth kennt es</small></div></div>
+    <div class="card"><div class="ico bl"><svg class="i" viewBox="0 0 24 24"><use href="#i-shield"/></svg></div><div><b>Apps nur über das Gateway</b><small>Direkte Aufrufe laufen ins Leere</small></div></div>
+    <div class="card"><div class="ico gr"><svg class="i" viewBox="0 0 24 24"><use href="#i-users"/></svg></div><div><b>Jede Person nur ihre Daten</b><small>Strikte Session‑Trennung</small></div></div>
+  </div>
+  <div class="foot"><span class="fwm">Hochschule Karlsruhe <span>· Micro‑App‑Plattform</span></span><b>12 / 18</b></div>
+</section>
+
+<!-- 10 BETRIEB -->
+
+
+
+<!-- 13 FAHRPLAN -->
+<section class="slide s13" data-title="Fahrplan">
+  <div class="eyebrow" data-a style="--i:0">Fahrplan · KW 44 bis 29.1.2027</div>
+  <h2 data-a style="--i:1">In Etappen <em>zur Abgabe.</em></h2>
+  <div class="gantt" data-a style="--i:2">
+    <div class="hdr"><div></div><div><div class="yr"><span>2026</span><span>2027</span></div><div class="wk cols14"><div>44</div><div>45</div><div>46</div><div>47</div><div>48</div><div>49</div><div>50</div><div>51</div><div class=pz>52</div><div class=pz>53</div><div>1</div><div>2</div><div>3</div><div>4</div></div></div></div>
+    <div class="gr-row " style="--i:0"><div class="nm">Kickoff<small>KW 44</small></div><div class="tk"><div class="bar3" style="--l:0.000%;--w:7.143%"></div></div></div>
+    <div class="gr-row " style="--i:1"><div class="nm">Durchstich<small>KW 45–47 · AP1–4</small></div><div class="tk"><div class="bar3" style="--l:7.143%;--w:21.429%"></div></div></div>
+    <div class="gr-row " style="--i:2"><div class="nm">Ausbau<small>KW 48–51</small></div><div class="tk"><div class="bar3" style="--l:28.571%;--w:28.571%"></div></div></div>
+    <div class="gr-row p" style="--i:3"><div class="nm">Demo‑Apps<small>KW 49–51</small></div><div class="tk"><div class="bar3" style="--l:35.714%;--w:21.429%"></div></div></div>
+    <div class="gr-row k" style="--i:4"><div class="nm">KI‑Tests<small>KW 47–3 · laufend</small></div><div class="tk"><div class="bar3" style="--l:21.429%;--w:71.429%"></div></div></div>
+    <div class="gr-row p" style="--i:5"><div class="nm">Pilot<small>KW 1–3 · Fachexpertinnen</small></div><div class="tk"><div class="bar3" style="--l:71.429%;--w:21.429%"></div></div></div>
+    <div class="gr-row h" style="--i:6"><div class="nm">Übergabe<small>KW 3–4 · Doku &amp; Betrieb</small></div><div class="tk"><div class="bar3" style="--l:85.714%;--w:14.286%"></div></div></div>
+    <div class="pause">WEIHNACHTEN</div>
+    <div class="abg"></div>
+  </div>
+  <div class="sched" data-a style="--i:3"><span><b>KW 43</b> Angebotspräsentation</span><span><b>KW 44</b> Start</span><span><b>29.1.2027</b> Abgabe</span></div>
+  <div class="foot"><span class="fwm">Hochschule Karlsruhe <span>· Micro‑App‑Plattform</span></span><b>13 / 18</b></div>
+</section>
+<section class="slide s13b" data-steps="4" data-title="KI testen">
+  <div class="eyebrow" data-a style="--i:0">Qualitätssicherung</div>
+  <h2 data-a style="--i:1">Hält sich die KI <em>an die Regeln?</em></h2>
+  <div class="stp2" data-a style="--i:2"><span><svg class="i" viewBox="0 0 24 24"><use href="#i-file"/></svg>Testaufgabe</span>›<span><svg class="i" viewBox="0 0 24 24"><use href="#i-bolt"/></svg>KI baut</span>›<span><svg class="i" viewBox="0 0 24 24"><use href="#i-scan"/></svg>Prüfung gegen die Skills</span>›<span><svg class="i" viewBox="0 0 24 24"><use href="#i-chart"/></svg><b>Score</b></span></div>
+  <div class="swap"><div class="brief">
+    <div class="bg4">
+      <div class="card bc" data-a style="--i:3"><div class="top"><div class="ico"><svg class="i" viewBox="0 0 24 24"><use href="#i-file"/></svg></div></div><h3>Testaufgabe</h3><p>Eine <b>feste Aufgabe</b>, zum Beispiel „Baue eine Noten-Übersicht“. Immer dieselbe, damit Läufe vergleichbar bleiben.</p></div>
+      <div class="card bc" data-a style="--i:4"><div class="top"><div class="ico bl"><svg class="i" viewBox="0 0 24 24"><use href="#i-bolt"/></svg></div></div><h3>KI baut</h3><p>Die KI bekommt <b>nur AGENTS.md und die Skills</b> und baut die App ohne weitere Hilfe.</p></div>
+      <div class="card bc" data-a style="--i:5"><div class="top"><div class="ico gr"><svg class="i" viewBox="0 0 24 24"><use href="#i-eye"/></svg></div></div><h3>Manuell prüfen</h3><p>Am Anfang schauen wir <b>von Hand</b>, ob die KI die <b>7 Regeln</b> einhält, zum Beispiel Aussehen und Kontrast.</p></div>
+      <div class="card bc sc" data-a style="--i:6"><div class="top"><div class="ico"><svg class="i" viewBox="0 0 24 24"><use href="#i-chart"/></svg></div></div><h3>Score</h3><p>Das Ergebnis in Prozent: <b>Wie viele Regeln</b> hat die KI wirklich eingehalten?</p></div>
+    </div>
+    <div class="tkw" data-a style="--i:8"><div class="ic"><svg class="i" viewBox="0 0 24 24"><use href="#i-bolt"/></svg></div><div>Fällt eine Regel durch, wird der <b>Skill geschärft</b>, die KI baut neu. Danach bauen wir daraus ein <b>automatisches Skript</b>.</div></div>
+  </div>
+  <div class="runs"><div class="rn lr1"><div class="lb">Lauf 1</div><div class="tg"><span class="m"><svg class="i" viewBox="0 0 24 24"><use href="#i-eye"/></svg> manuell geprüft</span><span class="a"><svg class="i" viewBox="0 0 24 24"><use href="#i-bolt"/></svg> Skript prüft automatisch</span></div><div class="rgw"><svg class="rg" viewBox="0 0 230 230"><circle class="bg" cx="115" cy="115" r="92"/><circle class="fg" cx="115" cy="115" r="92" style="--c:578.1;--o:167.6;--k:0;stroke:#cf222e"/></svg><div class="pc2" style="color:#cf222e">71 %</div></div><div class="cnt">5 von 7 Regeln <span>bestanden</span></div><div class="ms"><i><svg class="i" viewBox="0 0 24 24"><use href="#i-x"/></svg>Aussehen</i><i><svg class="i" viewBox="0 0 24 24"><use href="#i-x"/></svg>Kontrast</i></div></div><div class="fx lf1"><small>Skill geschärft</small><div class="ar"></div><b>Design‑Skill präzisiert</b></div><div class="rn lr2"><div class="lb">Lauf 2</div><div class="tg"><span class="m"><svg class="i" viewBox="0 0 24 24"><use href="#i-eye"/></svg> manuell geprüft</span><span class="a"><svg class="i" viewBox="0 0 24 24"><use href="#i-bolt"/></svg> Skript prüft automatisch</span></div><div class="rgw"><svg class="rg" viewBox="0 0 230 230"><circle class="bg" cx="115" cy="115" r="92"/><circle class="fg" cx="115" cy="115" r="92" style="--c:578.1;--o:80.9;--k:1;stroke:#e0a100"/></svg><div class="pc2" style="color:#e0a100">86 %</div></div><div class="cnt">6 von 7 Regeln <span>bestanden</span></div><div class="ms"><i><svg class="i" viewBox="0 0 24 24"><use href="#i-x"/></svg>Kontrast</i></div></div><div class="fx lf2"><small>Skill geschärft</small><div class="ar"></div><b>Kontrast‑Regel ergänzt</b></div><div class="rn fin lr3"><div class="lb">Lauf 3</div><div class="tg"><span class="m"><svg class="i" viewBox="0 0 24 24"><use href="#i-eye"/></svg> manuell geprüft</span><span class="a"><svg class="i" viewBox="0 0 24 24"><use href="#i-bolt"/></svg> Skript prüft automatisch</span></div><div class="rgw"><svg class="rg" viewBox="0 0 230 230"><circle class="bg" cx="115" cy="115" r="92"/><circle class="fg" cx="115" cy="115" r="92" style="--c:578.1;--o:0.0;--k:2;stroke:#16a34a"/></svg><div class="pc2" style="color:#16a34a">100 %</div></div><div class="cnt">7 von 7 Regeln <span>bestanden</span></div><div class="ms"><i class="ok"><svg class="i" viewBox="0 0 24 24"><use href="#i-check"/></svg>Alles bestanden</i></div></div></div></div>
+  <div class="ab"><div class="ic"><svg class="i" viewBox="0 0 24 24"><use href="#i-bolt"/></svg></div><div>Aus der Handprüfung wird ein <b>Skript</b>. Es prüft jeden Lauf <b>automatisch</b>: gleiche Regeln, keine Handarbeit.</div></div>
+  <div class="sdots"><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="foot"><span class="fwm">Hochschule Karlsruhe <span>· Micro‑App‑Plattform</span></span><b>14 / 18</b></div>
+</section>
+
+<!-- 13c PRÜF-KREISLAUF -->
+<section class="slide s13c" data-steps="3" data-title="Prüf-Kreislauf">
+  <div class="eyebrow" data-a style="--i:0">Qualitätssicherung</div>
+  <h2 data-a style="--i:1">Von Handarbeit <em>zum Skript.</em></h2>
+  <div class="cyc">
+    <div class="card cd" data-a style="--i:2"><div class="ico"><svg class="i" viewBox="0 0 24 24"><use href="#i-users"/></svg></div><div class="who">Schritt 1 · Mensch</div><h3>Person prüft</h3><p>Eine Person <b>testet die App</b> der KI von Hand und vergleicht sie mit den Regeln.</p></div>
+    <div class="card cd pr" data-k="1"><div class="ico bl"><svg class="i" viewBox="0 0 24 24"><use href="#i-file"/></svg></div><div class="who">Schritt 2 · Ergebnis</div><h3>Protokoll</h3><div class="lg"><i><svg class="i" viewBox="0 0 24 24"><use href="#i-x"/></svg>Aussehen <span>· Logo fehlt</span></i><i><svg class="i" viewBox="0 0 24 24"><use href="#i-x"/></svg>Kontrast <span>· Text zu hell</span></i></div></div>
+    <div class="card cd" data-k="2"><div class="ico gr"><svg class="i" viewBox="0 0 24 24"><use href="#i-bolt"/></svg></div><div class="who">Schritt 3 · Team</div><h3>Skills schärfen</h3><p>Das Entwicklungsteam <b>ergänzt die Skills</b> genau an den Stellen, die im Protokoll fehlen.</p></div>
+    <div class="card cd nx" data-k="2"><div class="ico"><svg class="i" viewBox="0 0 24 24"><use href="#i-rocket"/></svg></div><div class="who">Schritt 4 · Neuer Lauf</div><h3>KI baut neu</h3><p>Mit den geschärften Skills startet der <b>nächste Lauf</b>. Dann wieder Schritt 1.</p></div>
+  </div>
+  <div class="lp" data-k="2"><svg viewBox="0 0 1680 104"><defs><marker id="lpa" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:#d82206;stroke:none;stroke-dasharray:none;opacity:1"/></marker></defs><path d="M1481 0V42Q1481 66 1457 66H223Q199 66 199 42V8" marker-end="url(#lpa)"/></svg><div class="lbl2">Wiederholen, bis die Qualität stimmt</div></div>
+  <div class="fn2" data-k="3"><div><div class="k">Am Ende</div><h3>Ein Skript, gebaut <em>nach dem Protokoll.</em></h3><p>Jeder Fehler aus den Protokollen wird zu einer Prüfregel. So <b>sichert das Skript die Qualität</b> aller künftigen Apps automatisch.</p></div>
+    <div class="tm"><div class="cmt"># Prüfregeln aus den Protokollen</div><div><b>$</b> auto-check ./neue-app</div><div><span class="ok">✓</span> Aussehen</div><div><span class="ok">✓</span> Kontrast</div><div><span class="ok">✓</span> weitere Regeln …</div><div class="ok">7 von 7 Regeln bestanden</div></div></div>
+  <div class="sdots"><i></i><i></i><i></i><i></i></div>
+  <div class="foot"><span class="fwm">Hochschule Karlsruhe <span>· Micro‑App‑Plattform</span></span><b>15 / 18</b></div>
+</section>
+
+<!-- PROZESS B -->
+<section class="slide spz" data-steps="4" data-title="Prozess Rückblick">
+  <div class="eyebrow" data-a style="--i:0">Rückblick</div>
+  <h2 data-a style="--i:1">Jede neue App <em>durchläuft das.</em></h2>
+  <div class="lp2" data-k="3"><svg viewBox="0 0 1680 104"><defs><marker id="pzaB" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:#d82206;stroke:none;stroke-dasharray:none;opacity:1"/></marker></defs><path class="ln" d="M1162 104V44Q1162 18 1136 18H180Q154 18 154 44V98" marker-end="url(#pzaB)"/></svg><div class="lbl3">Nicht bestanden? Nächste Iteration</div></div>
+  <div class="trk">
+    <div class="sx" data-a style="--i:2"><div class="nd"><svg class="i" viewBox="0 0 24 24"><use href="#i-bolt"/></svg></div><h3>Entwickeln</h3><p>Die KI baut die App mit <b>Golden Master und Skills</b>.</p></div>
+    <div class="sx" data-k="1"><div class="nd"><svg class="i" viewBox="0 0 24 24"><use href="#i-branch"/></svg></div><h3>Prüfen</h3><p><b>Pipeline</b> mit Checks und Vier-Augen-Freigabe.</p></div>
+    <div class="sx" data-k="2"><div class="nd"><svg class="i" viewBox="0 0 24 24"><use href="#i-flask"/></svg></div><h3>Simulieren</h3><p><b>Secrets und Login</b> im Testlauf, bevor etwas live geht.</p></div>
+    <div class="sx sxc" data-k="3"><div class="nd"><svg class="i" viewBox="0 0 24 24"><use href="#i-eye"/></svg></div><h3>Qualität prüfen</h3><p><b>Protokoll</b> zeigt, welche Regeln noch fehlen.</p></div>
+    <div class="sx fin" data-k="4"><div class="nd"><svg class="i" viewBox="0 0 24 24"><use href="#i-check"/></svg></div><h3>Qualität sichern</h3><p>Ein <b>Skript</b> prüft jede künftige App automatisch.</p></div>
+  </div>
+  <div class="rs" data-k="4"><div class="ic"><svg class="i" viewBox="0 0 24 24"><use href="#i-bolt"/></svg></div><div>Gleicher Kreislauf, gleiche Regeln: <b>jede künftige App</b> startet mit dieser Qualität.</div></div>
+  <div class="sdots"><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="foot"><span class="fwm">Hochschule Karlsruhe <span>· Micro‑App‑Plattform</span></span><b>16 / 18</b></div>
+</section>
+
+<!-- 14 INVESTITION -->
+<section class="slide s14" data-title="Investition">
+  <div class="eyebrow" data-a style="--i:0">Investition</div>
+  <div class="wrap">
+    <div>
+      <div class="price" data-a style="--i:1">[€ __]</div>
+      <div class="price-s" data-a style="--i:2">Gesamt · zzgl. MwSt.<br>gültig bis [Datum]</div>
+    </div>
+    <div class="tbl" data-a style="--i:2">
+      <div class="tr2"><span class="c">AP1</span><span>Portal</span><span class="v">[__ PT]</span></div>
+      <div class="tr2"><span class="c">AP2</span><span>Golden Master</span><span class="v">[__ PT]</span></div>
+      <div class="tr2"><span class="c">AP3</span><span>Pipeline</span><span class="v">[__ PT]</span></div>
+      <div class="tr2"><span class="c">AP4</span><span>Sicherheit</span><span class="v">[__ PT]</span></div>
+      <div class="tr2"><span class="c">+</span><span>Demo‑Apps &amp; Pilot</span><span class="v">[__ PT]</span></div>
+    </div>
+  </div>
+  <div class="foot"><span class="fwm">Hochschule Karlsruhe <span>· Micro‑App‑Plattform</span></span><b>17 / 18</b></div>
+</section>
+
+<!-- 15 NÄCHSTE SCHRITTE -->
+<section class="slide s15" data-title="Los geht's">
+  <div class="eyebrow" data-a style="--i:0">Nächste Schritte</div>
+  <h2 data-a style="--i:1">Los <em>geht’s.</em></h2>
+  <div class="tl2">
+    <div class="tp " data-a style="--i:3"><div class="dt"><svg class="i" viewBox="0 0 24 24"><use href="#i-users"/></svg></div><div class="kw">KW 43</div><h3>Angebot</h3><p>Präsentation und Feedback.</p></div>
+    <div class="tp " data-a style="--i:4"><div class="dt"><svg class="i" viewBox="0 0 24 24"><use href="#i-key"/></svg></div><div class="kw">Vor dem Start</div><h3>Zugänge</h3><p>GitHub, Noten, E‑Akte, Exchange.</p></div>
+    <div class="tp l" data-a style="--i:5"><div class="dt"><svg class="i" viewBox="0 0 24 24"><use href="#i-rocket"/></svg></div><div class="kw">KW 44</div><h3>Kickoff</h3><p>Los geht’s mit dem Durchstich.</p></div>
+  </div>
+  <div class="contact" data-a style="--i:6">[Name] · [E‑Mail]</div>
+  <div class="foot"><span class="fwm">Hochschule Karlsruhe <span>· Micro‑App‑Plattform</span></span><b>18 / 18</b></div>
+</section>
+</div>
+
+<div id="ov"></div>
+<div id="hint">← → navigieren · G Übersicht · F Vollbild</div>
+
+<script>
+(function(){
+  var st=document.getElementById('stage'),sl=[].slice.call(document.querySelectorAll('.slide')),
+      pg=document.getElementById('prog'),ov=document.getElementById('ov'),n=0,stp=0;
+  function fit(){var s=Math.min(innerWidth/1920,innerHeight/1080);
+    st.style.transform='translate('+(-960*s)+'px,'+(-540*s)+'px) scale('+s+')';}
+  function maxStep(e){return parseInt(e.dataset.steps||0,10)}
+  function setStep(k){stp=k;var e=sl[n],m=maxStep(e);
+    for(var j=1;j<=m;j++)e.classList.toggle('k'+j,j<=k);
+    [].forEach.call(e.querySelectorAll('.sdots i'),function(d,j){d.classList.toggle('on',j===k)})}
+  function adv(d){var m=maxStep(sl[n]);
+    if(d>0&&stp<m)setStep(stp+1);else if(d<0&&stp>0)setStep(stp-1);
+    else if(d<0&&n>0){go(n-1);setStep(maxStep(sl[n]))}else go(n+d)}
+  function go(i,noHash){n=Math.max(0,Math.min(sl.length-1,i));stp=0;
+    sl.forEach(function(e,k){e.classList.toggle('on',k===n);if(maxStep(e))for(var j=0;j<=maxStep(e);j++){e.classList.remove('k'+j)}});
+    setStep(0);
+    pg.style.width=((n+1)/sl.length*100)+'%';
+    if(!noHash)try{history.replaceState(null,'','#'+(n+1))}catch(e){}}
+  function build(){sl.forEach(function(s,k){var b=document.createElement('button');
+    b.innerHTML='<b>'+String(k+1).padStart(2,'0')+'</b>'+s.dataset.title;
+    b.onclick=function(){ov.classList.remove('on');go(k)};ov.appendChild(b)})}
+  function toggleOv(){ov.classList.toggle('on');[].forEach.call(ov.children,function(b,k){b.classList.toggle('cur',k===n)})}
+  addEventListener('keydown',function(e){
+    if(['ArrowRight','PageDown',' ','Enter'].indexOf(e.key)>-1){e.preventDefault();adv(1)}
+    else if(['ArrowLeft','PageUp','Backspace'].indexOf(e.key)>-1){e.preventDefault();adv(-1)}
+    else if(e.key==='Home')go(0);else if(e.key==='End')go(sl.length-1);
+    else if(e.key==='g'||e.key==='G')toggleOv();
+    else if(e.key==='Escape')ov.classList.remove('on');
+    else if(e.key==='f'||e.key==='F'){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()}});
+  var x0=null;addEventListener('touchstart',function(e){x0=e.touches[0].clientX});
+  addEventListener('touchend',function(e){if(x0===null)return;var d=e.changedTouches[0].clientX-x0;if(Math.abs(d)>50)adv(d<0?1:-1);x0=null});
+  st.addEventListener('click',function(e){adv(e.clientX<innerWidth*.2?-1:1)});
+  document.querySelectorAll('.tog button').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();
+    document.querySelectorAll('.tog button').forEach(function(x){x.classList.toggle('on',x.dataset.st===b.dataset.st)});
+    document.querySelectorAll('.stack').forEach(function(x){x.classList.toggle('on',x.dataset.s===b.dataset.st)})})});
+  addEventListener('resize',fit);
+  fit();build();
+  var h=parseInt(location.hash.slice(1),10);go(isNaN(h)?0:h-1,true);
+  setTimeout(function(){var el=document.getElementById('hint');el.style.transition='opacity 1s';el.style.opacity=0},5000);
+})();
+</script>
+</body>
+</html>
